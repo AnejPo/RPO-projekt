@@ -1,0 +1,23 @@
+{
+    "tasks": [
+        {
+            "task_id": "circle",
+            "name": "Circle (Easy)",
+            "compare_type": "tracing",
+            "file": "svgs/circle.svg",
+            "difficulty": 1,
+            "params": {
+                "tolerance": 0.03
+            }
+        }
+    ],
+
+    "lessons": [
+        {
+            "lesson_id": "lesson_intro_circles",
+            "title": "Drawing Circles",
+            "text": "Circles are the foundation of many shapes...",
+            "tasks": ["circle"]
+        }
+    ]
+}
