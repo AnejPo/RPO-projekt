@@ -1,0 +1,14 @@
+{
+    "templates": [
+        {
+            "id": "circle",
+            "name": "Circle (Easy)",
+            "compare_type": "tracing",
+            "file": "svgs/circle.svg",
+            "difficulty": 1,
+            "params": {
+                "tolerance": 0.03
+            }
+        }
+    ]
+}
