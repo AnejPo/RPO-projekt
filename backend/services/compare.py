@@ -1,6 +1,9 @@
-#Samo dummy code za testiranje
+import perspective
+import body_parts
+import shading
+import tracing
 
-def compare_svg(template_id: str, user_svg: str) -> dict:
+def compare_svg(task: dict, user_svg: str) -> dict:
     """
     Cilj te funkcije v prihodnosti je:
     1) Nalozi template SVG z template_id
@@ -17,11 +20,36 @@ def compare_svg(template_id: str, user_svg: str) -> dict:
     :rtype: dict
     """
 
-    return{
-        "template_id" : template_id,
-        "score": 0,
-        "avg_error": None,
-        "max_error": None,
-        "errors": [],
-        "hints": ["Not implemented yet"]
-    }
+    compare_type = task.get("compare_type")
+    params = task.get("params", {})
+
+    if compare_type == "tracing":
+        return tracing.compare(
+            template_file = task.get("file"),
+            user_svg = user_svg,
+            **params
+        )
+    
+    elif compare_type == "body":
+        return body_parts.compare(
+            template_file = task.get("file"),
+            user_svg = user_svg,
+            **params
+        )
+    
+    elif compare_type == "perpective":
+        return perspective.compare(
+            template_file = task.get("file"),
+            user_svg = user_svg,
+            **params
+        )
+    
+    elif compare_type == "shading":
+        return shading.compare(
+            template_file = task.get("file"),
+            user_svg = user_svg,
+            **params
+        )
+
+    else:
+        raise ValueError(f"Unknown compare type: {compare_type}")
