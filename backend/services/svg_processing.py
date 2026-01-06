@@ -5,7 +5,7 @@ from svgpathtools import parse_path #dependency
 
 Point = Tuple[float, float]
 
-def sv_string_to_points(svg_text: str, samples: int = 300) -> List[Point]:
+def svg_string_to_points(svg_text: str, samples: int = 300) -> List[Point]:
     """
     Izvlece vse <path d="..."> iz SVG stringa in vzorči točke po njih
     
