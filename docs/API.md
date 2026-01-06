@@ -32,7 +32,8 @@ Example:
   "file": "svgs/circle.svg",
   "difficulty": 1,
   "params": {
-    "tolerance": 0.03
+    "tolerance": 0.03, 
+    "samples": 300 #meaning how many points should be distributed through the whole drawing (300-600 for simple tasks, 800-1500 for normal and 2000+ for complex)
   }
 }
 

@@ -7,7 +7,8 @@
             "file": "svgs/circle.svg",
             "difficulty": 1,
             "params": {
-                "tolerance": 0.03
+                "tolerance": 0.03,
+                "samples": 300
             }
         }
     ],

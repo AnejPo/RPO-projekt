@@ -1,4 +1,6 @@
 from services import perspective, body_parts, shading, tracing
+from pathlib import Path
+from services.svg_processing import sv_string_to_points, normalize_points
 
 def compare_svg(task: dict, user_svg: str) -> dict:
     """
@@ -17,8 +19,20 @@ def compare_svg(task: dict, user_svg: str) -> dict:
     :rtype: dict
     """
 
+    BACKEND_DIR = Path(__file__).resolve().parents[1] # backend/routes -> backend
+    ASSETS_DIR = BACKEND_DIR / "assets"
+
     compare_type = task.get("compare_type")
     params = task.get("params", {})
+
+    # Load template svg text
+    rel_path = task.get("file")
+    if not rel_path:
+        raise ValueError("Task has no 'file' field")
+    
+    template_path = ASSETS_DIR / rel_path
+    if not template_path.exists():
+        raise ValueError(f"Template SVG not found: {rel_path}")
 
     if compare_type == "tracing":
         return tracing.compare(
@@ -50,3 +64,5 @@ def compare_svg(task: dict, user_svg: str) -> dict:
 
     else:
         raise ValueError(f"Unknown compare type: {compare_type}")
+
+    
