@@ -1,7 +1,4 @@
-import perspective
-import body_parts
-import shading
-import tracing
+from services import perspective, body_parts, shading, tracing
 
 def compare_svg(task: dict, user_svg: str) -> dict:
     """
@@ -37,7 +34,7 @@ def compare_svg(task: dict, user_svg: str) -> dict:
             **params
         )
     
-    elif compare_type == "perpective":
+    elif compare_type == "perspective":
         return perspective.compare(
             template_file = task.get("file"),
             user_svg = user_svg,
