@@ -280,17 +280,13 @@ function redoPoint() {
 // ====== EXPORT ZA DEBUG (SVG) ======
 
 function exportDrawingHistory() {
-    // za debug vrnemo kar SVG, ki ga pošiljamo backendu
     const svg = getCanvasSVG();
     return svg || '';
 }
 
 /**
  * Ustvari SVG iz drawingHistory – ta SVG gre v POST /compare.
- * Po API dokumentaciji:
- * svg string mora imeti xmlns="http://www.w3.org/2000/svg"
- *
- * Backend pričakuje SVG, vektorske poteze pretvorimo v <path d="M ... L ..."/>.
+ * Backend pričakuje SVG z <path d="M ... L ..."/>.
  */
 
 function getCanvasSVG() {
@@ -308,7 +304,6 @@ function getCanvasSVG() {
         const color = stroke.color || '#000000';
         const widthAttr = stroke.width || 2;
 
-        // d = "M x0 y0 L x1 y1 L x2 y2 ..."
         const pts = stroke.points;
         let d = `M ${pts[0].x.toFixed(2)} ${pts[0].y.toFixed(2)}`;
         for (let i = 1; i < pts.length; i++) {
