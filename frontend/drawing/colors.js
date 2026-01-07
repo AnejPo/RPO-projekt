@@ -106,7 +106,7 @@ function initColorUI(allowedColors = null) {
         }
     } else {
         // default: samo črna
-        colorsToShow = PREDEFINED_COLORS//.filter(c => c.id === 1);
+        colorsToShow = PREDEFINED_COLORS.filter(c => c.id === 1);
     }
 
     menu.innerHTML = '';
