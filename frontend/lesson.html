@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Učenje risanja</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a href="index.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-left"></i> Nazaj
+        </a>
+        <span class="navbar-brand mb-0 h1" id="lessonTitle">Lekcija</span>
+        <div class="badge bg-warning text-dark">
+            Točke: <span id="totalPointsDisplayLesson">0</span>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid my-3">
+    <div class="row">
+        <!-- LEVI STOLPEC -->
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Navodila
+                </div>
+                <div class="card-body">
+                    <p id="lessonText" class="mb-3">Nalaganje...</p>
+
+                    <h6 id="taskName">Naloga</h6>
+                    <p class="mb-1">Težavnost: <span id="taskDifficulty">-</span></p>
+                    <p class="mb-1">Tip: <span id="taskType">-</span></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    Rezultat
+                </div>
+                <div class="card-body">
+                    <h3 id="scoreValue">-</h3>
+                    <div id="hintsContainer"></div>
+                    <button id="submitBtn" class="btn btn-primary mt-3 w-100">Oddaj risbo</button>
+                    <button id="clearBtn" class="btn btn-secondary mt-2 w-100">Pobriši risbo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESNI STOLPEC -->
+        <div class="col-md-8">
+            <div class="toolbar mb-3 p-3 bg-light rounded">
+                <div class="row g-3 align-items-center">
+
+                    <!-- ČOPIČI: ikona + dropdown -->
+                    <div class="col-auto">
+                        <label class="form-label mb-0 me-2">Čopič:</label>
+                        <div class="btn-group" id="brushSelectorGroup">
+                            <button type="button" class="btn btn-outline-dark" id="currentBrushButton" title="Izbran čopič">
+                                <i class="bi bi-brush"></i>
+                                <span id="currentBrushLabel" class="ms-1">Čopič 1 (5px)</span>
+                            </button>
+                            <button type="button" class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split"
+                                    id="brushDropdownToggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Spremeni čopič</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" id="brushDropdownMenu"></ul>
+                        </div>
+                    </div>
+
+                    <!-- BARVE: ikona + dropdown -->
+                    <div class="col-auto">
+                        <label class="form-label mb-0 me-2">Barva:</label>
+                        <div class="btn-group" id="colorSelectorGroup">
+                            <button type="button" class="btn btn-outline-dark" id="currentColorButton" title="Izbrana barva">
+                                <span id="currentColorSwatch"
+                                      style="display:inline-block;width:16px;height:16px;border-radius:50%;
+                                             border:1px solid #fff;background:#000;"></span>
+                                <span id="currentColorLabel" class="ms-1">Črna</span>
+                            </button>
+                            <button type="button" class="btn btn-outline-dark dropdown-toggle dropdown-toggle-split"
+                                    id="colorDropdownToggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="visually-hidden">Spremeni barvo</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-dark" id="colorDropdownMenu"></ul>
+                        </div>
+                    </div>
+
+                    <!-- UNDO / REDO GUMBI -->
+                    <div class="col-auto">
+                        <div class="btn-group" role="group" aria-label="Undo/redo">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btnFastRewind" title="Fast rewind (ena poteza nazaj)">
+                                <i class="bi bi-skip-backward-fill"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btnRewind" title="Rewind (ena točka nazaj)">
+                                <i class="bi bi-caret-left-fill"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btnForward" title="Forward (ena točka naprej)">
+                                <i class="bi bi-caret-right-fill"></i>
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="btnFastForward" title="Fast forward (ena poteza naprej)">
+                                <i class="bi bi-skip-forward-fill"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-auto">
+                        <label class="form-label mb-0 me-2">Odtenek</label>
+                            <input type="range" id="hueSlider" min="0" max="360" value="0">
+                        <label class="form-label mb-0 me-2">Prosojnost</label>
+                            <input type="range" id="opacitySlider" min="0" max="1" step="0.01" value="1">
+                    </div>
+
+                    <div class="col-auto">
+                        <span>Risanje: <span id="drawingStatus" class="text-muted">Ne</span></span>
+                    </div>
+                    <div class="col-auto">
+                        <span>Pozicija: <span id="positionText">-</span></span>
+                    </div>
+                    <div class="col-auto">
+                        <span>Poteze: <span id="strokeCount">0</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper position-relative d-flex justify-content-center align-items-center">
+                <div id="guideLayer" class="position-absolute" style="pointer-events:none; opacity:0.25;"></div>
+                <!-- Canvas za risanje -->
+                <canvas id="drawingCanvas" width="800" height="600"></canvas>
+            </div>
+
+            <!-- DEBUG KONZOLA -->
+            <div class="card mt-3">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Debug konzola</span>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="btnExportHistory">
+                        Izvozi vektorske točke
+                    </button>
+                </div>
+                <div class="card-body">
+                    <textarea id="debugConsole" class="form-control" rows="5" readonly
+                              style="font-family: monospace; font-size: 0.85rem;"></textarea>
+                </div>
+            </div>
+            <!-- KONEC DEBUG KONZOLE -->
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="config.js"></script>
+
+<script src="courses/courses.js"></script>
+<script src="courses/tasks.js"></script>
+
+<script src="drawing/brushes.js"></script>
+<script src="drawing/canvas.js"></script>
+<script src="drawing/tracing.js"></script>
+<script src="drawing/colors.js"></script>
+
+<script src="app.js"></script>
+</body>
+</html>
