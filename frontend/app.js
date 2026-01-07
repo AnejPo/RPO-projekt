@@ -223,24 +223,7 @@ async function safeInitLessonPage() {
             clearBtn.addEventListener('click', clearCanvas);
         }
 
-        const { lessonId, taskId } = getLessonAndTaskFromUrl();
-
-        const nextBtn = document.getElementById('nextBtn');
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                getNextTaskId(lessonId, taskId)
-                .then(nextTask => {
-                    if (nextTask) {
-                        const base = window.location.pathname.replace(/[^/]+$/, '');
-                        window.location.href = `${base}/lesson.html?lesson=${lessonId}&task=${nextTask}`;
-                        console.log(`/lesson.html?lesson=${lessonId}&task=${nextTask}`);
-                    }
-                })
-            })
-        }
-
-
-        const lessonPointsEl = document.getElementById('totalPointsDisplayLesson');
+         const lessonPointsEl = document.getElementById('totalPointsDisplayLesson');
         if (lessonPointsEl) {
             lessonPointsEl.textContent = getTotalPoints();
         }
@@ -282,7 +265,7 @@ async function handleSubmitDrawing() {
 
     try {
         const result = await submitDrawing(taskId, svgContent); // iz tasks.js
-        console.log('[submitDrawing] rezultat:', result);
+        console.log('[submitDrawing] rezultat:', result, taskId);
 
         const scoreEl = document.getElementById('scoreValue');
         if (scoreEl && typeof result.score !== 'undefined') {
@@ -318,14 +301,4 @@ async function handleSubmitDrawing() {
         console.error('❌ submitDrawing error:', err);
         alert('Napaka pri oddaji risbe: ' + (err.message || err));
     }
-}
-
-async function getNextTaskId(lesson_id, currentTaskId) {
-    const lesson = await getLessonContent(lesson_id);
-    const tasks = lesson.tasks || [];
-
-    const idx = tasks.indexOf(currentTaskId);
-    if (idx === -1) return null;
-
-    return tasks[idx + 1] || null; //null = konec
 }
