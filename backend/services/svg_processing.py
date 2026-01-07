@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import List, Tuple
 import xml.etree.ElementTree as ET
 from svgpathtools import parse_path #dependency
+import math
 
 Point = Tuple[float, float]
 
@@ -25,22 +26,44 @@ def svg_string_to_stroke(svg_text: str, samples: int = 300) -> List[List[Point]]
     except ET.ParseError:
         return []
     
-    ds: List[str] = []
+    strokes: List[List[Point]] = []
     for elem in root.iter():
+        #PATH
         if is_tag(elem, "path"):
             d = elem.attrib.get("d")
-            if d:
-                ds.append(d)
+            if not d:
+                continue
 
-    strokes: List[List[Point]] = []
-    for d in ds:
-        p = parse_path(d)
-        pts: List[Point] = []
-        for i in range(samples):
-            t = i / (samples - 1) if samples > 1 else 0.0
-            z = p.point(t)
-            pts.append((float(z.real), float(z.imag)))
-        strokes.append(pts)
+            p = parse_path(d)
+            pts: List[Point] = []
+            for i in range(samples):
+                t = i / (samples - 1) if samples > 1 else 0.0
+                z = p.point(t)
+                pts.append((float(z.real), float(z.imag)))
+
+            if pts:
+                strokes.append(pts)
+        #ELIPSE
+        elif is_tag(elem, "ellipse"):
+            cx = float(elem.attrib.get("cx", 0.0))
+            cy = float(elem.attrib.get("cy", 0.0))
+            rx = float(elem.attrib.get("rx", 0.0))
+            ry = float(elem.attrib.get("ry", 0.0))
+
+            pts = sample_ellipse(cx, cy, rx, ry, samples)
+            if pts:
+                strokes.append(pts)
+
+        #RECT
+        elif is_tag(elem, "rect"):
+            x = float(elem.attrib.get("x", 0.0))
+            y = float(elem.attrib.get("y", 0.0))
+            w = float(elem.attrib.get("width", 0.0))
+            h = float(elem.attrib.get("height", 0.0))
+
+            pts = sample_rect(x,y,w,h,samples)
+            if pts:
+                strokes.append(pts)
 
     return strokes
 
@@ -176,4 +199,41 @@ def normalize_points(points: List[Point]) -> List[Point]:
     
     return [((x-cx)/scale, (y-cy)/scale) for (x,y) in points]
     
+def sample_ellipse(cx: float, cy: float, rx:float, ry:float, samples:int) -> List[Point]:
+    if samples <= 0 or rx <= 0 or ry <= 0:
+        return pts
     
+    pts: List[Point] = []
+
+    for i in range(samples):
+        t = 2.0 * math.pi * i / samples
+        x = cx + rx * math.cos(t)
+        y = cy + ry * math.sin(t)
+        pts.append((x,y))
+    return pts
+
+def sample_rect(x:float, y:float, w:float, h:float, samples:int) -> List[Point]:
+    pts: List[Point]
+
+    if samples <= 0 or w <= 0 or h <= 0:
+        return pts
+
+    per_edge = max(2, samples // 4)
+
+    for i in range(per_edge):
+        t = i / (per_edge - 1)
+        pts.append((x + t * w, y))
+
+    for i in range(per_edge):
+        t = i / (per_edge - 1)
+        pts.append((x + w, y + t * h))
+
+    for i in range(per_edge):
+        t = i / (per_edge - 1)
+        pts.append((x + w - t * w, y+h))
+
+    for i in range(per_edge - 1):
+        t = i / (per_edge - 1)
+        pts.append((x, y + h - t * h))
+
+    return pts
