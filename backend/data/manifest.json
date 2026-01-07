@@ -23,7 +23,7 @@
             "params": {
                 "target_angle_deg": 90,
                 "outlier_percent": 10,
-                "tolerance": 0.05,
+                "tolerance": 0.03,
                 "samples": 300
             }
         }
