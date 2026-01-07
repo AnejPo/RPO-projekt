@@ -31,11 +31,23 @@ Example:
   "compare_type": "tracing",
   "file": "svgs/circle.svg",
   "difficulty": 1,
+  "instructions": "Trace this circle as perfectly as possible",
   "params": {
-    "tolerance": 0.03, 
+    "outlier percent": 10, #koliko procentov najhujsih tock bo ignoriranih (ne upostevaj 10% tock, ki so najbolj oddaljene od tega kako bi risba morala izgledati)
+    "tolerance": 0.03, #Lower tollerance = harsher scoring
     "samples": 300 #meaning how many points should be distributed through the whole drawing (300-600 for simple tasks, 800-1500 for normal and 2000+ for complex)
   }
 }
+
+Vaje z dosti locenimi ravnimi crtami, ki so obrnjene v isto smer imajo se:
+"target_angle_deg": 90,
+
+90 = vertikalne crte
+0 = horizontalne crte
+45 = posevne
+.
+.
+.
 
 ---
 
@@ -49,7 +61,7 @@ Example:
   "lesson_id": "lesson_intro_circles",
   "title": "Drawing Circles",
   "text": "Circles are the foundation of many shapes...",
-  "tasks": ["circle"]
+  "tasks": ["circle", "vertical_lines"]
 }
 
 ---
@@ -151,16 +163,15 @@ Request (application/json):
 
 Response 200 (application/json):
 
-{
-  "task_id": "circle",
-  "score": 78,
-  "avg_error": 0.021,
-  "max_error": 0.08,
-  "errors": [
-    { "x": 0.31, "y": 0.52, "e": 0.12 }
-  ],
-  "hints": ["Left side is too flat"]
-}
+return{
+        "task_id": task.get("task_id"),
+        "score": score,
+        "avg_error": avg_u,
+        "max_error": p90_u,
+        "errors": errors,
+        "straight_score": straight_score,
+        "hints": []
+    }
 
 Errors:
 - 400: missing or invalid fields

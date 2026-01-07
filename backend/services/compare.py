@@ -1,6 +1,6 @@
 from services import perspective, body_parts, shading, tracing
 from pathlib import Path
-from services.svg_processing import svg_string_to_points, normalize_points
+from services.svg_processing import svg_string_to_points, normalize_points, svg_string_to_stroke, normalize_strokes
 
 def compare_svg(task: dict, user_svg: str) -> dict:
     """
@@ -33,10 +33,13 @@ def compare_svg(task: dict, user_svg: str) -> dict:
 
     #normalize
     samples = int(params.get("samples", 300))
-    template_pts = svg_string_to_points(template_svg, samples=samples)
-    user_pts = svg_string_to_points(user_svg, samples=samples)
+    #template_pts = svg_string_to_points(template_svg, samples=samples)
+    #user_pts = svg_string_to_points(user_svg, samples=samples)
 
-    if not template_pts:
+    template_strokes = svg_string_to_stroke(template_svg, samples=samples)
+    user_strokes = svg_string_to_stroke(user_svg, samples=samples)
+
+    if not template_strokes:
         return{
             "task_id": task.get("task_id"),
             "score": 0,
@@ -46,7 +49,7 @@ def compare_svg(task: dict, user_svg: str) -> dict:
             "hints": ["Template SVG had no <path d=...> elements or could not be parsed"]
         }
     
-    if not user_pts:
+    if not user_strokes:
         return{
             "task_id": task.get("task_id"),
             "score": 0,
@@ -56,38 +59,35 @@ def compare_svg(task: dict, user_svg: str) -> dict:
             "hints": ["User SVG had no <path d=...> elements or could not be parsed"]
         }
     
-    template_points_n = normalize_points(template_pts)
-    user_pts_n = normalize_points(user_pts)
+    template_strokes_n = normalize_strokes(template_strokes)
+    user_strokes_n = normalize_strokes(user_strokes)
 
-    print(f"Template: {template_points_n}")
-    print(f"User: {user_pts_n}")
+    #print(f"Template: {template_strokes_n}") DEBUG PRINTS
+    #print(f"User: {user_strokes_n}")
+
 
     if compare_type == "tracing":
         return tracing.compare(
             task,
-            template_points_n, user_pts_n
-            **params
+            template_strokes_n, user_strokes_n
         )
     
     elif compare_type == "body":
         return body_parts.compare(
             task,
-            template_points_n, user_pts_n
-            **params
+            template_strokes_n, user_strokes_n
         )
     
     elif compare_type == "perspective":
         return perspective.compare(
             task,
-            template_points_n, user_pts_n
-            **params
+            template_strokes_n, user_strokes_n
         )
     
     elif compare_type == "shading":
         return shading.compare(
             task,
-            template_points_n, user_pts_n
-            **params
+            template_strokes_n, user_strokes_n
         )
 
     else:
