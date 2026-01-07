@@ -1,8 +1,8 @@
 # Tukaj noter so samo ukazi za generiranje mock podatkov za bazo
 # TREBA POTEM ZBRISATI!!!
 
-from backend.database.queries import *
-from backend.database.utils import create_connection
+from database.queries import *
+from database.utils import create_connection
 
 def generate_mock_data():
     connection = create_connection()
@@ -30,7 +30,8 @@ def clear_mock_data():
     delete_user(connection, username="asmith")
     delete_user(connection, username="bjones")
     
-    delete_user_grade(connection, user_id=1)
-    delete_user_grade(connection, user_id=2)
-    delete_user_grade(connection, user_id=3)
+    delete_user_grade(connection, user_id=1, task_id="Math")
+    delete_user_grade(connection, user_id=2, task_id="Science")
+    delete_user_grade(connection, user_id=3, task_id="History")
+    delete_user_grade(connection, user_id=1, task_id="English")
     

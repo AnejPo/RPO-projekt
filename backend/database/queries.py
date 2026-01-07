@@ -1,6 +1,6 @@
 import sqlite3
 from sqlite3 import Error
-from backend.database.utils import execute_query
+from database.utils import execute_query
 
 def create_user_table(connection):
     create_user_table_query = """
