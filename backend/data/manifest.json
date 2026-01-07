@@ -6,10 +6,28 @@
             "compare_type": "tracing",
             "file": "svgs/circle.svg",
             "difficulty": 1,
+            "Instructions":"",
             "params": {
-                "tolerance": 0.03
+                "outlier_percent": 10,
+                "tolerance": 0.03,
+                "samples": 300
+            }
+        },
+        {
+            "task_id": "vertical_lines",
+            "name": "Vertical Lines (Easy)",
+            "compare_type": "tracing",
+            "file": "svgs/Task1/1.svg",
+            "difficulty": 1,
+            "Instructions":"",
+            "params": {
+                "target_angle_deg": 90,
+                "outlier_percent": 10,
+                "tolerance": 0.05,
+                "samples": 300
             }
         }
+
     ],
 
     "lessons": [
@@ -17,7 +35,7 @@
             "lesson_id": "lesson_intro_circles",
             "title": "Drawing Circles",
             "text": "Circles are the foundation of many shapes...",
-            "tasks": ["circle"]
+            "tasks": ["vertical_lines", "circle"]
         }
     ]
 }

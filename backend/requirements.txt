@@ -1,1 +1,5 @@
+Flask
+svgpathtools
+flask-swagger-ui
 flask-cors
+scipy
