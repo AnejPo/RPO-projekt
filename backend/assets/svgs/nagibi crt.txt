@@ -1,0 +1,23 @@
+~~~ COURSE 1 ~~~
+Task 1
+	Exercises 5, 8 - 135°
+	Exercises 6, 7 - 45°
+	Exercise 10 - 92° 98° 90° 103° 90° 105° 90° 109° 92° 115° 94° 139° 101° 136° 100°
+	(Od leve proti desni podana strmina za vsako crto)
+
+Task 2
+	Exercises 3, 5 - 133°
+	Exercise 4, 6 - 47°
+
+Task 3
+	Squares - 55° 125° 127° 53°
+	Triangles 1. vrsta - (63° 120°), 2. vrsta - (63° 122°), 
+		3. vrsta 1. - (62° 155°), 2. - (62° 45°), 3. (61° 152°),
+		4. vrsta 1 - (82° 136° -8°), 2 - (80º 133° -8°), 3 - (73° 26° -10), 4 - (74° 18° -7°)
+
+Task 5
+	Exercise 1 - 25°
+	Exercise 2 - 67° 102° 120° 30°
+	Exercise 3 - 35°
+	Exercise 4 - 68° 32°
+	Exercise 5 - 59° 123°
