@@ -1,6 +1,7 @@
 from scipy.spatial import cKDTree
 from typing import List, Tuple, Dict, Any
 import numpy as np
+from services.svg_processing import denormalize_point
 
 Point = Tuple[float, float]
 
@@ -29,7 +30,7 @@ def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: floa
     s = 1.0 - (wobble_mean / (tolerance / 2.0))
     return float(max(0.0, min(1.0, s)))
 
-def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: List[List[Point]]) -> dict:
+def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: List[List[Point]], user_tf: dict[str, float]) -> dict:
     """
     Primerja normalizirane tracane točke z uporabo nearest-neighbour dolžino (Chamfer dolžina)
     
@@ -117,10 +118,13 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
     k = min(max(1, heatmap_points), len(d_u)) #koliko najhujsih tock bomo pokazali
     worst_idx = np.argsort(d_u)[-k:] #vzami zadnih k indexov (najvecje napake)
 
-    errors = [
-        {"x": float(U[i,0]), "y": float(U[i, 1]), "e": float(d_u[i])}
-        for i in worst_idx
-    ]
+    errors = []
+    for i in worst_idx:
+        xn = float(U[i, 0])
+        yn = float(U[i, 1])
+        x_raw, y_raw = denormalize_point(xn, yn, user_tf)
+        errors.append({"x": float(x_raw), "y": float(y_raw), "e": float(d_u[i])})
+
 
     return{
         "task_id": task.get("task_id"),
