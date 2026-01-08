@@ -88,20 +88,28 @@ async function initializeLessonFlow() {
         // 1. Naloži vsebino naloge
         const lesson = await getLessonContent(currentLessonId);
         const lessonTitleElem = document.getElementById('lessonTitle');
-        const lessonTextElem = document.getElementById('lessonText');
 
         if (lessonTitleElem) lessonTitleElem.textContent = lesson.title;
-        if (lessonTextElem) lessonTextElem.textContent = lesson.text;
 
         // 2. Naloži metapodatke naloge
         const task = await getTaskMetadata(currentTaskId);
         const taskNameElem = document.getElementById('taskName');
         const taskDiffElem = document.getElementById('taskDifficulty');
         const taskTypeElem = document.getElementById('taskType');
+        const taskInstructionsElem = document.getElementById('taskInstructions');
 
         if (taskNameElem) taskNameElem.textContent = task.name;
         if (taskDiffElem) taskDiffElem.textContent = '⭐'.repeat(task.difficulty);
         if (taskTypeElem) taskTypeElem.textContent = task.compare_type;
+
+        const taskInstr =
+            (typeof task.Instructions === 'string' && task.Instructions.length > 0)
+                ? task.Instructions
+                : (task.instructions || '');
+
+        if (taskInstructionsElem) {
+            taskInstructionsElem.textContent = taskInstr;
+        }
 
         // 3. Naloži SVG za primerjavo
         const svgGuide = await getTaskSVG(currentTaskId);

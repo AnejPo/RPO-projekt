@@ -12,7 +12,7 @@ function getCookie(name) {
 }
 
 function setCookie(name, value) {
-    document.cookie = `${name}=${encodeURIComponent(value)}; path=/`;
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/`;
 }
 
 function loadProgress() {
@@ -112,6 +112,12 @@ async function safeInitDashboard() {
     }
 }
 
+/**
+ * Dashboard:
+ * - prikaže vse lessone
+ * - vsi so vidni, a zaklenjeni (greyed), če prejšnji lesson še ni dokončan
+ * - vsak lesson ima dropdown s taski; taski se obarvajo, če so completed
+ */
 async function initDashboard() {
     const lessonsList = document.getElementById('lessonsList');
     if (!lessonsList) {
@@ -137,63 +143,146 @@ async function initDashboard() {
     lessonsList.innerHTML = '';
 
     lessons.forEach((lesson, index) => {
-        const lessonCompleted = Object.keys(progress.tasks).some(key => {
-            const [lessonId] = key.split('|');
-            const entry = progress.tasks[key];
-            return lessonId === lesson.lesson_id && entry.completed;
-        });
+        // Ali je v tem lessonu vsaj en completed task?
+        const hasCompletedTask = (lesson.tasks || []).some(taskId =>
+            isTaskCompleted(lesson.lesson_id, taskId)
+        );
 
-        let isUnlocked = false;
-        if (index === 0) {
-            isUnlocked = true;
-        } else {
-            const prevLesson = lessons[index - 1];
-            const prevCompleted = Object.keys(progress.tasks).some(key => {
-                const [lessonId] = key.split('|');
-                const entry = progress.tasks[key];
-                return lessonId === prevLesson.lesson_id && entry.completed;
-            });
-            isUnlocked = prevCompleted;
+        // Ali je prejšnji lesson “zaključen” (vsaj en completed task)?
+        let previousLessonUnlocked = true;
+        if (index > 0) {
+            const prev = lessons[index - 1];
+            previousLessonUnlocked = (prev.tasks || []).some(taskId =>
+                isTaskCompleted(prev.lesson_id, taskId)
+            );
         }
 
+        // Lesson je odklenjen, če je prvi ali ima sam completed task,
+        // ali če je prejšnji lesson zaključen
+        const isUnlocked =
+            index === 0 ||
+            hasCompletedTask ||
+            previousLessonUnlocked;
+
+        // --- UI element za lesson ---
         const item = document.createElement('div');
-        item.className = 'list-group-item d-flex justify-content-between align-items-center';
+        item.className = 'list-group-item';
+
+        if (!isUnlocked) {
+            item.className += ' text-muted bg-light';
+        }
+
+        const row = document.createElement('div');
+        row.className = 'd-flex flex-column';
+
+        // ZGORNJA VRSTICA: puščica + naslov + značke
+        const topRow = document.createElement('div');
+        topRow.className = 'd-flex justify-content-between align-items-center';
+
+        const leftPart = document.createElement('div');
+        leftPart.className = 'd-flex align-items-center';
+
+        // dropdown puščica
+        const toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.className = 'btn btn-sm btn-outline-secondary me-2';
+        toggleBtn.innerHTML = '<i class="bi bi-caret-down-fill"></i>';
+        toggleBtn.setAttribute('aria-expanded', 'false');
 
         const title = document.createElement('div');
-        title.innerHTML = `<strong>${lesson.title}</strong><br><small>${lesson.lesson_id}</small>`;
+        title.innerHTML = `<strong>${lesson.title}</strong><br><small>${lesson.text}</small>`;
 
-        const right = document.createElement('div');
+        leftPart.appendChild(toggleBtn);
+        leftPart.appendChild(title);
+
+        const rightPart = document.createElement('div');
+
+        if (hasCompletedTask) {
+            const badge = document.createElement('span');
+            badge.className = 'badge bg-success ms-2';
+            badge.textContent = 'Vsaj ena naloga zaključena';
+            rightPart.appendChild(badge);
+        }
 
         if (!isUnlocked) {
             const lock = document.createElement('span');
-            lock.className = 'badge bg-secondary';
+            lock.className = 'badge bg-secondary ms-2';
             lock.textContent = 'Zaklenjeno';
-            right.appendChild(lock);
+            rightPart.appendChild(lock);
+        }
+
+        topRow.appendChild(leftPart);
+        topRow.appendChild(rightPart);
+
+        // SPODNJI DEL: kratek course tekst
+        const lessonText = document.createElement('div');
+        lessonText.className = 'mt-2';
+
+        // SEZNAM TASKOV (dropdown)
+        const tasksContainer = document.createElement('div');
+        tasksContainer.className = 'mt-2';
+        tasksContainer.style.display = 'none';
+
+        const tasksList = document.createElement('div');
+        tasksList.className = 'list-group';
+
+        if (Array.isArray(lesson.tasks) && lesson.tasks.length > 0) {
+            lesson.tasks.forEach(taskId => {
+                const taskItem = document.createElement('button');
+                taskItem.type = 'button';
+                taskItem.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+
+                const labelSpan = document.createElement('span');
+                labelSpan.textContent = taskId;
+
+                const right = document.createElement('div');
+
+                const completed = isTaskCompleted(lesson.lesson_id, taskId);
+                if (completed) {
+                    const cBadge = document.createElement('span');
+                    cBadge.className = 'badge bg-success';
+                    cBadge.textContent = 'Dokončano';
+                    right.appendChild(cBadge);
+                }
+
+                taskItem.appendChild(labelSpan);
+                taskItem.appendChild(right);
+
+                if (isUnlocked) {
+                    taskItem.addEventListener('click', () => {
+                        const url = `lesson.html?lesson=${encodeURIComponent(lesson.lesson_id)}&task=${encodeURIComponent(taskId)}`;
+                        window.location.href = url;
+                    });
+                } else {
+                    taskItem.disabled = true;
+                }
+
+                tasksList.appendChild(taskItem);
+            });
         } else {
-            const btn = document.createElement('a');
-            const firstTaskId = lesson.tasks && lesson.tasks.length > 0 ? lesson.tasks[0] : null;
-
-            if (firstTaskId) {
-                btn.href = `lesson.html?lesson=${encodeURIComponent(lesson.lesson_id)}&task=${encodeURIComponent(firstTaskId)}`;
-                btn.className = 'btn btn-sm btn-primary';
-                btn.textContent = lessonCompleted ? 'Ponovi' : 'Začni';
-            } else {
-                btn.className = 'btn btn-sm btn-secondary disabled';
-                btn.textContent = 'Ni nalog';
-            }
-
-            right.appendChild(btn);
+            const noTasks = document.createElement('div');
+            noTasks.className = 'text-muted small';
+            noTasks.textContent = 'Ta lekcija še nima nalog.';
+            tasksList.appendChild(noTasks);
         }
 
-        if (lessonCompleted) {
-            const badge = document.createElement('span');
-            badge.className = 'badge bg-success ms-2';
-            badge.textContent = 'Dokončano';
-            right.appendChild(badge);
-        }
+        tasksContainer.appendChild(tasksList);
 
-        item.appendChild(title);
-        item.appendChild(right);
+        // toggle logika
+        toggleBtn.addEventListener('click', () => {
+            const expanded = tasksContainer.style.display === 'block';
+            tasksContainer.style.display = expanded ? 'none' : 'block';
+            toggleBtn.innerHTML = expanded
+                ? '<i class="bi bi-caret-down-fill"></i>'
+                : '<i class="bi bi-caret-up-fill"></i>';
+            toggleBtn.setAttribute('aria-expanded', String(!expanded));
+        });
+
+        row.appendChild(topRow);
+        row.appendChild(lessonText);
+        row.appendChild(tasksContainer);
+
+        item.appendChild(row);
         lessonsList.appendChild(item);
     });
 }
@@ -235,7 +324,6 @@ async function safeInitLessonPage() {
 
 // WRAPPER okoli prave initializeLessonFlow, da se ne zaleti na index.html
 async function initializeLessonFlowSafely() {
-    // zaščita – če koda po nesreči teče na index.html, se takoj ustavi
     if (!document.getElementById('drawingCanvas')) {
         console.warn('[app] initializeLessonFlowSafely called without drawingCanvas – skipping');
         return;
@@ -248,7 +336,7 @@ async function initializeLessonFlowSafely() {
     }
 }
 
-// ---------- SUBMIT RISBE (SVG -> backend) ---------- //
+// ---------- SUBMIT RISBE (SVG -> backend) + NASLEDNJI TASK ---------- //
 
 async function handleSubmitDrawing() {
     const { lessonId, taskId } = getLessonAndTaskFromUrl();
@@ -264,7 +352,7 @@ async function handleSubmitDrawing() {
     }
 
     try {
-        const result = await submitDrawing(taskId, svgContent); // iz tasks.js
+        const result = await submitDrawing(taskId, svgContent);
         console.log('[submitDrawing] rezultat:', result);
 
         const scoreEl = document.getElementById('scoreValue');
@@ -288,8 +376,7 @@ async function handleSubmitDrawing() {
         }
 
         if (typeof result.points === 'number') {
-            const { lessonId: lId, taskId: tId } = getLessonAndTaskFromUrl();
-            addTaskCompletion(lId || 'unknown_lesson', tId || taskId, result.points);
+            addTaskCompletion(lessonId || 'unknown_lesson', taskId, result.points);
 
             const lessonPointsEl = document.getElementById('totalPointsDisplayLesson');
             if (lessonPointsEl) {
@@ -297,8 +384,121 @@ async function handleSubmitDrawing() {
             }
         }
 
+        
+        try { window.__lastCompareResult = result; } catch (e) { /* ignore */ }
+
+        
+        try {
+            if (Array.isArray(result.errors) && result.errors.length > 0) {
+                const c = document.getElementById('drawingCanvas');
+                const cw = (c && c.width) ? c.width : 800;
+                const ch = (c && c.height) ? c.height : 600;
+
+                const pxPoints = result.errors.map(p => {
+                    if (!p) return null;
+
+                    // Prefer explicit pixel fields if present
+                    if (typeof p.x_px === 'number' && typeof p.y_px === 'number') {
+                        return { x: Math.round(p.x_px), y: Math.round(p.y_px), e: p.e };
+                    }
+
+                    
+                    if (Number.isInteger(p.x) && Number.isInteger(p.y)) {
+                        return { x: p.x, y: p.y, e: p.e };
+                    }
+
+                    
+                    if (typeof p.x === 'number' && typeof p.y === 'number' && (Math.abs(p.x) > 1.5 || Math.abs(p.y) > 1.5)) {
+                        return { x: Math.round(p.x), y: Math.round(p.y), e: p.e };
+                    }
+
+                   
+                    if (typeof p.x === 'number' && typeof p.y === 'number') {
+                        if (p.x >= -0.6 && p.x <= 0.6 && p.y >= -0.6 && p.y <= 0.6) {
+                            return { x: Math.round((p.x + 0.5) * cw), y: Math.round((p.y + 0.5) * ch), e: p.e };
+                        }
+                        if (p.x >= 0 && p.x <= 1 && p.y >= 0 && p.y <= 1) {
+                            return { x: Math.round(p.x * cw), y: Math.round(p.y * ch), e: p.e };
+                        }
+                    }
+
+                    console.warn('Could not map error point to pixels, skipping:', p);
+                    return null;
+                }).filter(Boolean);
+
+                console.log('Mapped pxPoints (first 10):', pxPoints.slice(0,10));
+
+                if (typeof setErrorMarkers === 'function') {
+                    setErrorMarkers(pxPoints);
+                    
+                    try {
+                        if (typeof computeMarkerOffsets === 'function') {
+                            const info = computeMarkerOffsets();
+                            console.log('computeMarkerOffsets after setErrorMarkers ->', info ? { avg: info.avg, medianDist: info.medianDist } : null);
+                        }
+                        if (typeof applyMedianCorrection === 'function') applyMedianCorrection();
+                        if (typeof snapMarkers === 'function') snapMarkers();
+                    } catch (e) {
+                        console.warn('Post-processing markers failed:', e);
+                    }
+                } else {
+                    console.warn('setErrorMarkers not available');
+                }
+            } else {
+                if (typeof clearErrorMarkers === 'function') clearErrorMarkers();
+            }
+        } catch (e) {
+            console.warn('Could not draw error markers:', e);
+        }
+
+        // če je rezultat uspešen, pokaži gumb NASLEDNJI TASK (če obstaja)
+        if (result.score >= 70 && lessonId) {
+            await maybeShowNextTaskButton(lessonId, taskId);
+        }
+
     } catch (err) {
         console.error('❌ submitDrawing error:', err);
         alert('Napaka pri oddaji risbe: ' + (err.message || err));
+    }
+}
+
+/**
+ * Po uspešnem rezultatu poišče naslednji task v istem lessonu
+ * in prikaže gumb "Naslednji task", če obstaja.
+ */
+async function maybeShowNextTaskButton(lessonId, currentTaskId) {
+    try {
+        const lessons = await getAllLessons();
+        const lesson = lessons.find(l => l.lesson_id === lessonId);
+        if (!lesson || !Array.isArray(lesson.tasks)) return;
+
+        const idx = lesson.tasks.indexOf(currentTaskId);
+        if (idx === -1 || idx === lesson.tasks.length - 1) {
+            // ni naslednjega taska
+            return;
+        }
+
+        const nextTaskId = lesson.tasks[idx + 1];
+
+        let nextBtn = document.getElementById('nextTaskBtn');
+        if (!nextBtn) {
+            const submitBtn = document.getElementById('submitBtn');
+            if (!submitBtn) return;
+
+            nextBtn = document.createElement('button');
+            nextBtn.id = 'nextTaskBtn';
+            nextBtn.className = 'btn btn-success mt-2 w-100';
+            nextBtn.textContent = 'Naslednji task';
+
+            submitBtn.insertAdjacentElement('afterend', nextBtn);
+        }
+
+        nextBtn.onclick = () => {
+            const url = `lesson.html?lesson=${encodeURIComponent(lessonId)}&task=${encodeURIComponent(nextTaskId)}`;
+            window.location.href = url;
+        };
+        nextBtn.style.display = 'block';
+    } catch (e) {
+        console.error('maybeShowNextTaskButton error', e);
     }
 }
