@@ -63,11 +63,13 @@ function initCanvas() {
     drawingStatusElem = document.getElementById('drawingStatus');
     positionTextElem = document.getElementById('positionText');
 
-    canvas.addEventListener('mousedown', handleMouseDown);
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseup', handleMouseUp);
-    canvas.addEventListener('mouseleave', handleMouseUp);
+    canvas.addEventListener('pointerdown', handlePointerDown, { passive: false });
+    canvas.addEventListener('pointermove', handlePointerMove, { passive: false });
+    canvas.addEventListener('pointerup', handlePointerUp, { passive: false });
+    canvas.addEventListener('pointercancel', handlePointerUp, { passive: false });
+    canvas.addEventListener('pointerleave', handlePointerUp, { passive: false });
 
+    canvas.style.touchAction = 'none';
     // undo/redo gumbi
     const btnRewind = document.getElementById('btnRewind');
     const btnFastRewind = document.getElementById('btnFastRewind');
@@ -120,7 +122,10 @@ function getMousePos(event) {
     };
 }
 
-function handleMouseDown(e) {
+function handlePointerDown(e) {
+    e.preventDefault();
+    canvas.setPointerCapture?.(e.pointerId);
+
     isDrawing = true;
 
     const pos = getMousePos(e);
@@ -146,7 +151,8 @@ function handleMouseDown(e) {
     updateDrawingStatus(true);
 }
 
-function handleMouseMove(e) {
+function handlePointerMove(e) {
+    e.preventDefault();
     const pos = getMousePos(e);
     if (pos.x === lastX && pos.y === lastY) return;
 
@@ -168,8 +174,11 @@ function handleMouseMove(e) {
     lastY = pos.y;
 }
 
-function handleMouseUp(e) {
+function handlePointerUp(e) {
+    e.preventDefault();
     if (!isDrawing) return;
+
+    canvas.releasePointerCapture?.(e.pointerId);
 
     isDrawing = false;
     ctx.closePath();

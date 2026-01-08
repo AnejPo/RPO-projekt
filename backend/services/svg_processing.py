@@ -237,3 +237,27 @@ def sample_rect(x:float, y:float, w:float, h:float, samples:int) -> List[Point]:
         pts.append((x, y + h - t * h))
 
     return pts
+
+
+def normalize_strokes_with_tf(strokes: List[List[Point]]) -> tuple[List[List[Point]], dict[str, float]]:
+    if not strokes:
+        return strokes, {"cx": 0.0, "cy": 0.0, "scale": 1.0}
+
+    all_points = [pt for stroke in strokes for pt in stroke]
+    if not all_points:
+        return strokes, {"cx": 0.0, "cy": 0.0, "scale": 1.0}
+
+    cx, cy, scale = compute_normalization(all_points)
+
+    if scale == 0:
+        return [[(0.0, 0.0) for _ in stroke] for stroke in strokes], {"cx": cx, "cy": cy, "scale": 1.0}
+
+    norm = [
+        [((x - cx) / scale, (y - cy) / scale) for (x, y) in stroke]
+        for stroke in strokes
+    ]
+    return norm, {"cx": float(cx), "cy": float(cy), "scale": float(scale)}
+
+
+def denormalize_point(xn: float, yn: float, tf: dict[str, float]) -> Point:
+    return (xn * tf["scale"] + tf["cx"], yn * tf["scale"] + tf["cy"])
