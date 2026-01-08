@@ -16,6 +16,8 @@ let positionTextElem;
 // vektorska zgodovina
 let drawingHistory = [];  // array strokes
 let currentStroke = null;
+// hranijo se markerji
+let errorMarkers = [];
 
 /**
  * Stroke struktura:
@@ -106,10 +108,15 @@ function initCanvas() {
 }
 
 function getMousePos(event) {
+    // miskine kordinate iz css v canvas za pravilno delovanje
     const rect = canvas.getBoundingClientRect();
+    const xCss = event.clientX - rect.left;
+    const yCss = event.clientY - rect.top;
+    const scaleX = (canvas.width && rect.width) ? (canvas.width / rect.width) : 1;
+    const scaleY = (canvas.height && rect.height) ? (canvas.height / rect.height) : 1;
     return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
+        x: xCss * scaleX,
+        y: yCss * scaleY
     };
 }
 
@@ -231,7 +238,221 @@ function redrawFromHistory() {
     });
 
     updateDrawingStatus(false);
+   //izrise errormarkers
+    try { drawErrorMarkers(); } catch (e) { }
 }
+
+//naredise rdece kroge za napake
+function drawErrorMarkers() {
+    if (!canvas || !ctx) return;
+    if (!Array.isArray(errorMarkers) || errorMarkers.length === 0) return;
+
+    console.log('drawErrorMarkers called, count=', errorMarkers.length);
+
+    ctx.save();
+    ctx.fillStyle = 'red';
+    ctx.strokeStyle = 'darkred';
+    ctx.lineWidth = 1;
+    const radius = 6; 
+
+    // prilagajanje sosedu
+    const userPts = [];
+    if (Array.isArray(drawingHistory) && drawingHistory.length) {
+        drawingHistory.forEach(s => {
+            if (s && Array.isArray(s.points)) {
+                s.points.forEach(pt => userPts.push({ x: pt.x, y: pt.y }));
+            }
+        });
+    }
+
+    const dist2 = (a,b) => (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y);
+    const maxSnapDist = 60 * 60;
+
+    errorMarkers.forEach((p, idx) => {
+        if (!p || typeof p.x !== 'number' || typeof p.y !== 'number') return;
+        let drawX = Math.round(p.x);
+        let drawY = Math.round(p.y);
+
+        // snepa sosdeedu ce je dovolj blizu
+        if (userPts.length > 0) {
+            let best = null, bestd = Infinity;
+            for (let i = 0; i < userPts.length; i++) {
+                const d = dist2(p, userPts[i]);
+                if (d < bestd) { bestd = d; best = userPts[i]; }
+            }
+            if (best && bestd <= maxSnapDist) {
+                drawX = Math.round(best.x);
+                drawY = Math.round(best.y);
+            }
+        }
+
+       
+        const x = Math.max(0, Math.min(canvas.width - 1, drawX));
+        const y = Math.max(0, Math.min(canvas.height - 1, drawY));
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+    });
+
+    ctx.restore();
+}
+
+function setErrorMarkers(points) {
+    if (!Array.isArray(points)) {
+        errorMarkers = [];
+        redrawFromHistory();
+        return;
+    }
+
+    let incoming = points.slice(0, 200);
+
+
+    try {
+        const userPts = [];
+        if (Array.isArray(drawingHistory) && drawingHistory.length) {
+            drawingHistory.forEach(s => {
+                if (s && Array.isArray(s.points)) {
+                    s.points.forEach(p => userPts.push({ x: p.x, y: p.y }));
+                }
+            });
+        }
+
+        if (userPts.length > 0 && incoming.length > 0) {
+            
+            const dist2 = (a,b) => (a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y);
+
+            // za vsak market najblizji user dot
+            const pairs = incoming.map(m => {
+                let best = null, bestd = Infinity;
+                for (let i=0;i<userPts.length;i++){
+                    const d = dist2(m, userPts[i]);
+                    if (d < bestd) { bestd = d; best = userPts[i]; }
+                }
+                return { m, nearest: best, d: Math.sqrt(bestd) };
+            });
+
+            const dists = pairs.map(p => p.d).sort((a,b)=>a-b);
+            const n = dists.length;
+            const pct = 0.80; // use the 80th percentile as cutoff
+            const cutoff = dists[Math.max(0, Math.min(n-1, Math.floor(pct * n)))] || dists[dists.length-1] || 0;
+            const good = pairs.filter(p => p.nearest && p.d <= cutoff && isFinite(p.d));
+
+            if (good.length > 0) {
+                // compute median dx and dy for robustness against outliers
+                const dxs = good.map(p => p.m.x - p.nearest.x).sort((a,b)=>a-b);
+                const dys = good.map(p => p.m.y - p.nearest.y).sort((a,b)=>a-b);
+                const median = arr => {
+                    const nn = arr.length;
+                    if (nn === 0) return 0;
+                    if (nn % 2 === 1) return arr[(nn-1)/2];
+                    return (arr[nn/2 - 1] + arr[nn/2]) / 2.0;
+                };
+                const medDx = median(dxs);
+                const medDy = median(dys);
+
+                const applyThreshold = 2; // px
+                if (Math.abs(medDx) > applyThreshold || Math.abs(medDy) > applyThreshold) {
+                    console.log('Applying marker correction medianDx,medianDy =', medDx.toFixed(2), medDy.toFixed(2), '(based on', good.length, 'matches, cutoff=', Math.round(cutoff), 'px)');
+                    incoming = incoming.map(p => ({ x: Math.round(p.x - medDx), y: Math.round(p.y - medDy), e: p.e }));
+                }
+            }
+        }
+    } catch (e) {
+        console.warn('Error while computing marker correction:', e);
+    }
+
+    errorMarkers = incoming;
+    // redraw da so markerji na vrhu
+    redrawFromHistory();
+}
+
+function clearErrorMarkers() {
+    errorMarkers = [];
+    redrawFromHistory();
+}
+
+// pomoc z testnimimarkerji
+function testDrawMarkers() {
+    const w = canvas ? canvas.width : 800;
+    const h = canvas ? canvas.height : 600;
+    const samples = [
+        { x: Math.round(w * 0.25), y: Math.round(h * 0.25) },
+        { x: Math.round(w * 0.5), y: Math.round(h * 0.5) },
+        { x: Math.round(w * 0.75), y: Math.round(h * 0.75) }
+    ];
+    console.log('testDrawMarkers ->', samples);
+    setErrorMarkers(samples);
+}
+
+window.testDrawMarkers = testDrawMarkers;
+
+function showMarkerPairsTable() {
+    // remove existing overlay if present
+    const existing = document.getElementById('markerPairsOverlay');
+    if (existing) existing.remove();
+
+    const state = getDebugState();
+    const markers = state.errorMarkers || [];
+    const strokes = state.drawingHistory || [];
+
+    const userPts = [];
+    strokes.forEach(s => {
+        if (s && Array.isArray(s.points)) s.points.forEach(p => userPts.push({ x: p.x, y: p.y }));
+    });
+
+    const pairs = markers.map(m => {
+        // najde najblizji
+        let best = null, bestd = Infinity;
+        for (let i=0;i<userPts.length;i++){
+            const dx = m.x - userPts[i].x; const dy = m.y - userPts[i].y;
+            const d = Math.hypot(dx, dy);
+            if (d < bestd) { bestd = d; best = userPts[i]; }
+        }
+        return { m, nearest: best, dx: best ? (m.x - best.x) : null, dy: best ? (m.y - best.y) : null, dist: bestd };
+    });
+
+    // compute median correction from good matches (reuse computeMarkerOffsets logic)
+    const offsets = computeMarkerOffsets() || { avg: { dx:0, dy:0 }, medianDist: 0 };
+
+   
+}
+
+function applyMedianCorrection() {
+    const info = computeMarkerOffsets();
+    if (!info || !info.avg) return;
+    const dx = info.avg.dx || 0;
+    const dy = info.avg.dy || 0;
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) {
+        console.log('Median correction too small, skipping');
+        return;
+    }
+    errorMarkers = errorMarkers.map(p => ({ x: Math.round(p.x - dx), y: Math.round(p.y - dy), e: p.e }));
+    console.log('Applied median correction:', dx.toFixed(2), dy.toFixed(2));
+    redrawFromHistory();
+}
+
+// snepanje markerjev user inputu
+function snapMarkers() {
+    const state = getDebugState();
+    const strokes = state.drawingHistory || [];
+    const userPts = [];
+    strokes.forEach(s => { if (s && Array.isArray(s.points)) s.points.forEach(p => userPts.push(p)); });
+    if (userPts.length === 0) return;
+    const dist2 = (a,b) => (a.x-b.x)*(a.x-b.x)+(a.y-b.y)*(a.y-b.y);
+    const newMarkers = errorMarkers.map(m => {
+        let best = null, bestd = Infinity;
+        for (let i=0;i<userPts.length;i++){ const d = dist2(m, userPts[i]); if (d < bestd) { bestd = d; best = userPts[i]; }}
+        const threshold = Math.max(25*25, bestd); // allow snapping to whatever is best but not too far
+        if (best && bestd <= threshold) return { x: Math.round(best.x), y: Math.round(best.y), e: m.e };
+        return m;
+    });
+    errorMarkers = newMarkers;
+    console.log('Snapped markers to nearest user points');
+    redrawFromHistory();
+}
+
+
 
 // ====== UNDO / REDO NA PODLAGI BUFFERJA ======
 
