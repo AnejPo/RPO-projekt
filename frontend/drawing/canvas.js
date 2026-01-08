@@ -129,8 +129,6 @@ function handleMouseDown(e) {
 
     const style = getCurrentBrushStyle();
 
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
     ctx.strokeStyle = style.strokeStyle;
     ctx.lineWidth = style.lineWidth;
     ctx.lineCap = style.lineCap;
@@ -150,6 +148,7 @@ function handleMouseDown(e) {
 
 function handleMouseMove(e) {
     const pos = getMousePos(e);
+    if (pos.x === lastX && pos.y === lastY) return;
 
     if (positionTextElem) {
         positionTextElem.textContent = `X: ${pos.x.toFixed(0)}, Y: ${pos.y.toFixed(0)}`;
@@ -159,13 +158,11 @@ function handleMouseMove(e) {
 
     const style = getCurrentBrushStyle();
 
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
     ctx.lineTo(pos.x, pos.y);
-    ctx.strokeStyle = style.strokeStyle;
-    ctx.lineWidth = style.lineWidth;
-    ctx.lineCap = style.lineCap;
-    ctx.lineJoin = style.lineJoin;
     ctx.stroke();
-
+    
     currentStroke.points.push({ x: pos.x, y: pos.y });
     lastX = pos.x;
     lastY = pos.y;
@@ -176,11 +173,13 @@ function handleMouseUp(e) {
 
     isDrawing = false;
     ctx.closePath();
-
+    
     if (currentStroke && currentStroke.points.length > 1) {
         drawingHistory.push(currentStroke);
     }
+    
     currentStroke = null;
+    redrawFromHistory(); /*tole je workaround, specifično za opacity, ki odstrani overlapping*/ 
 
     updateDrawingStatus(false);
 }
@@ -223,12 +222,13 @@ function redrawFromHistory() {
     drawingHistory.forEach(stroke => {
         if (!stroke.points || stroke.points.length < 2) return;
 
-        ctx.beginPath();
+        
         ctx.strokeStyle = stroke.color;
         ctx.lineWidth = stroke.width;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
 
+        ctx.beginPath();
         ctx.moveTo(stroke.points[0].x, stroke.points[0].y);
         for (let i = 1; i < stroke.points.length; i++) {
             ctx.lineTo(stroke.points[i].x, stroke.points[i].y);
