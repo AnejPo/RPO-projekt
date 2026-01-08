@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="228.30037mm"
+   height="171.96552mm"
+   viewBox="0 0 228.30037 171.96552"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
+   sodipodi:docname="Grid2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.0351712"
+     inkscape:cx="404.76398"
+     inkscape:cy="439.54084"
+     inkscape:window-width="2560"
+     inkscape:window-height="1374"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(2.1166669,-32.279167)">
+    <path
+       id="rect1"
+       style="fill:none;stroke:#d32e2e"
+       d="M 172.47521,32.93114 V 203.8364 m -60.70263,0 V 32.93114"
+       sodipodi:nodetypes="cccc" />
+    <path
+       id="rect2"
+       style="fill:none;stroke:#d32e2e"
+       d="M 53.935745,203.84451 V 32.939253"
+       sodipodi:nodetypes="cc" />
+    <path
+       id="rect3"
+       style="fill:none;stroke:#d32e2e"
+       d="M 226.14364,118.6524 H -1.556361"
+       sodipodi:nodetypes="cc" />
+    <path
+       style="fill:none;stroke:#d32e2e;stroke-width:1"
+       d="M 111.62257,32.279167 226.1286,118.66987 112.38935,204.0382 -1.8610731,118.15869 Z"
+       id="path1" />
+    <path
+       style="fill:none;stroke:#d32e2e;stroke-width:1"
+       d="M 225.61741,118.92547 112.13376,73.42977 -2.3722607,118.66987 111.36698,158.7981 Z"
+       id="path2" />
+  </g>
+</svg>
