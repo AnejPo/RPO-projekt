@@ -1,6 +1,6 @@
 from services import perspective, body_parts, shading, tracing
 from pathlib import Path
-from services.svg_processing import svg_string_to_points, normalize_points, svg_string_to_stroke, normalize_strokes
+from services.svg_processing import svg_string_to_points, normalize_points, svg_string_to_stroke, normalize_strokes, normalize_strokes_with_tf
 
 def compare_svg(task: dict, user_svg: str) -> dict:
     """
@@ -60,7 +60,7 @@ def compare_svg(task: dict, user_svg: str) -> dict:
         }
     
     template_strokes_n = normalize_strokes(template_strokes)
-    user_strokes_n = normalize_strokes(user_strokes)
+    user_strokes_n, user_tf = normalize_strokes_with_tf(user_strokes)
 
     #print(f"Template: {template_strokes_n}") DEBUG PRINTS
     #print(f"User: {user_strokes_n}")
@@ -69,7 +69,8 @@ def compare_svg(task: dict, user_svg: str) -> dict:
     if compare_type == "tracing":
         return tracing.compare(
             task,
-            template_strokes_n, user_strokes_n
+            template_strokes_n, user_strokes_n,
+            user_tf
         )
     
     elif compare_type == "body":
