@@ -52,6 +52,16 @@ async function submitDrawing(taskId, svgContent) {
         task_id: taskId,
         svg: svgContent
     };
+    //notranje dimenzije canvasa, da backend preslika normalizirane kordinate
+    try {
+        const c = document.getElementById('drawingCanvas');
+        if (c && typeof c.width === 'number' && typeof c.height === 'number') {
+            payload.canvas_width = c.width;
+            payload.canvas_height = c.height;
+        }
+    } catch (e) {
+        // ignore
+    }
 
     const response = await fetch(url, {
         method: 'POST',

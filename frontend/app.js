@@ -384,6 +384,73 @@ async function handleSubmitDrawing() {
             }
         }
 
+        
+        try { window.__lastCompareResult = result; } catch (e) { /* ignore */ }
+
+        
+        try {
+            if (Array.isArray(result.errors) && result.errors.length > 0) {
+                const c = document.getElementById('drawingCanvas');
+                const cw = (c && c.width) ? c.width : 800;
+                const ch = (c && c.height) ? c.height : 600;
+
+                const pxPoints = result.errors.map(p => {
+                    if (!p) return null;
+
+                    // Prefer explicit pixel fields if present
+                    if (typeof p.x_px === 'number' && typeof p.y_px === 'number') {
+                        return { x: Math.round(p.x_px), y: Math.round(p.y_px), e: p.e };
+                    }
+
+                    
+                    if (Number.isInteger(p.x) && Number.isInteger(p.y)) {
+                        return { x: p.x, y: p.y, e: p.e };
+                    }
+
+                    
+                    if (typeof p.x === 'number' && typeof p.y === 'number' && (Math.abs(p.x) > 1.5 || Math.abs(p.y) > 1.5)) {
+                        return { x: Math.round(p.x), y: Math.round(p.y), e: p.e };
+                    }
+
+                   
+                    if (typeof p.x === 'number' && typeof p.y === 'number') {
+                        if (p.x >= -0.6 && p.x <= 0.6 && p.y >= -0.6 && p.y <= 0.6) {
+                            return { x: Math.round((p.x + 0.5) * cw), y: Math.round((p.y + 0.5) * ch), e: p.e };
+                        }
+                        if (p.x >= 0 && p.x <= 1 && p.y >= 0 && p.y <= 1) {
+                            return { x: Math.round(p.x * cw), y: Math.round(p.y * ch), e: p.e };
+                        }
+                    }
+
+                    console.warn('Could not map error point to pixels, skipping:', p);
+                    return null;
+                }).filter(Boolean);
+
+                console.log('Mapped pxPoints (first 10):', pxPoints.slice(0,10));
+
+                if (typeof setErrorMarkers === 'function') {
+                    setErrorMarkers(pxPoints);
+                    
+                    try {
+                        if (typeof computeMarkerOffsets === 'function') {
+                            const info = computeMarkerOffsets();
+                            console.log('computeMarkerOffsets after setErrorMarkers ->', info ? { avg: info.avg, medianDist: info.medianDist } : null);
+                        }
+                        if (typeof applyMedianCorrection === 'function') applyMedianCorrection();
+                        if (typeof snapMarkers === 'function') snapMarkers();
+                    } catch (e) {
+                        console.warn('Post-processing markers failed:', e);
+                    }
+                } else {
+                    console.warn('setErrorMarkers not available');
+                }
+            } else {
+                if (typeof clearErrorMarkers === 'function') clearErrorMarkers();
+            }
+        } catch (e) {
+            console.warn('Could not draw error markers:', e);
+        }
+
         // če je rezultat uspešen, pokaži gumb NASLEDNJI TASK (če obstaja)
         if (result.score >= 70 && lessonId) {
             await maybeShowNextTaskButton(lessonId, taskId);
