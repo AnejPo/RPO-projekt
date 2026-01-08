@@ -356,13 +356,28 @@ async function handleSubmitDrawing() {
         console.log('[submitDrawing] rezultat:', result);
 
         const scoreEl = document.getElementById('scoreValue');
+        const hintsContainer = document.getElementById('hintsContainer');
+        
+        // ne dovoli oddaje prazne risbe
+        if (result.score === 0 && (!result.errors || result.errors.length === 0)) {
+            if (hintsContainer) {
+                hintsContainer.innerHTML = '';
+                const div = document.createElement('div');
+                div.className = 'alert alert-danger py-2';
+                div.textContent = 'Prazne risbe ni mogoče oddati!';
+                div.style.color = 'red';
+                div.style.fontWeight = 'bold';
+                hintsContainer.appendChild(div);
+            }
+            return;
+        }
+
         if (scoreEl && typeof result.score !== 'undefined') {
             scoreEl.textContent = result.score.toFixed
                 ? result.score.toFixed(2)
                 : String(result.score);
         }
 
-        const hintsContainer = document.getElementById('hintsContainer');
         if (hintsContainer) {
             hintsContainer.innerHTML = '';
             if (Array.isArray(result.hints)) {

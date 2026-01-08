@@ -145,6 +145,21 @@ async function handleSubmitDrawing() {
         const hintsContainer = document.getElementById('hintsContainer');
         const resultsPanel = document.getElementById('resultsPanel');
 
+        // ne dovoli oddaje prazne risbe
+        if (result.score === 0 && (!result.errors || result.errors.length === 0)) {
+            if (hintsContainer) {
+                hintsContainer.innerHTML = '';
+                const div = document.createElement('div');
+                div.className = 'alert alert-danger py-2';
+                div.textContent = 'Prazne risbe ni mogoče oddati!';
+                div.style.color = 'red';
+                div.style.fontWeight = 'bold';
+                hintsContainer.appendChild(div);
+            }
+            if (resultsPanel) resultsPanel.style.display = 'block';
+            return;
+        }
+
         if (scoreElem) scoreElem.textContent = result.score;
         if (resultsPanel) resultsPanel.style.display = 'block';
 
