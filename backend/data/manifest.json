@@ -142,7 +142,8 @@
             "task_id":"test",
             "name":"Test perspective",
             "compare_type":"perspective",
-            "file":"svgs/Perspektiva/PerspektivaTest.svg",
+            "file":"svgs/Perspektiva/Perspektiva.svg",
+            "reference": "svgs/perspektivaTest.svg",
             "difficulty":"2",
             "Instructions":"test",
             "params": {
