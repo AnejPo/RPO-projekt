@@ -8,7 +8,7 @@ const PREDEFINED_BRUSHES = [
     { id: 6, size: 25, name: 'Čopič 6 (25px)' }
 ];
 
-// trenutni čopič
+// Trenutni čopič
 let currentBrush = {
     id: PREDEFINED_BRUSHES[0].id,
     size: PREDEFINED_BRUSHES[0].size,
@@ -61,6 +61,9 @@ function initBrushUI(allowedBrushIds = null) {
 
         a.addEventListener('click', () => {
             selectBrushById(brush.id);
+            if (typeof setCurrentTool === 'function') {
+                setCurrentTool('brush');
+            }
         });
 
         li.appendChild(a);
@@ -93,7 +96,7 @@ function setCurrentBrush(brush) {
     }
 }
 
-// izbira čopiča po id
+// Izbira čopič po id
 function selectBrushById(brushId) {
     const brush = PREDEFINED_BRUSHES.find(b => b.id === Number(brushId));
     if (!brush) {

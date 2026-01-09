@@ -301,6 +301,19 @@ async function safeInitLessonPage() {
         if (typeof initColorUI === 'function') {
             initColorUI();
         }
+        if (typeof initLineWidthUI === 'function') {
+            initLineWidthUI();
+        }
+
+        // Dodaj event listener za brush button - postavi tool na 'brush'
+        const brushBtn = document.getElementById('currentBrushButton');
+        if (brushBtn) {
+            brushBtn.addEventListener('click', () => {
+                if (typeof setCurrentTool === 'function') {
+                    setCurrentTool('brush');
+                }
+            });
+        }
 
         const submitBtn = document.getElementById('submitBtn');
         if (submitBtn) {

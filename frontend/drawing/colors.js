@@ -145,6 +145,9 @@ function initColorUI(allowedColors = null) {
 
         btn.addEventListener('click', () => {
             setCurrentColor(color.hex);
+            if (typeof setCurrentTool === 'function') {
+                setCurrentTool('brush');
+            }
         });
 
         li.appendChild(btn);
