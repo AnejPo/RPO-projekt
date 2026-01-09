@@ -5,19 +5,28 @@ from services.svg_processing import denormalize_point
 
 Point = Tuple[float, float]
 
-def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: float, tolerance: float) -> float:
+def score_straightness(user_strokes_n: List[List[Point]], tolerance: float) -> float:
     """
     Vrne oceno med [0...1]. 1 = zlo ravne crte, 0 = zlo neravne crte
     """
-
-    theta = np.deg2rad(target_angle_deg)
-    n = np.array([-np.sin(theta), np.cos(theta)], dtype=np.float32)
-
+    
     wobble_vals = []
     for stroke in user_strokes_n:
         if len(stroke) < 5:
             continue
         P = np.asarray(stroke, dtype=np.float32)
+
+        #za vsak stroke pogledam, kam je crta usmerjena in kako dolga je, ce bi bila ravna
+        #na to idealno crto pa potem dam normalo
+        diff = P[-1] - P[0]
+        length = np.linalg.norm(diff)
+        if length < 0.01: #ignoriri pike
+            continue
+
+        direction = diff / length
+        n = np.array([-direction[1], direction[0]], dtype=np.float32)
+        
+        #tuki potem se dejanski stroke projecira na normalo, in se tu potem zracuna odklon od idealne crte
         perp = P @ n
         wobble = float(np.std(perp))
         wobble_vals.append(wobble)
@@ -106,11 +115,8 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
 
 #RAVNOST
     straight_score = None
-    if target_angle is not None:
-        straight_score = score_straightness(user_strokes_n, float(target_angle), tolerance)
-        final = 0.3 * acc_score + 0.35 * cov_score + 0.35 * straight_score
-    else:
-        final = 0.55 * acc_score + 0.45 * cov_score #accuracy = 55% ocene, coverage = 45% ocene
+    straight_score = score_straightness(user_strokes_n, tolerance)
+    final = 0.55 * acc_score + 0.45 * cov_score #accuracy = 55% ocene, coverage = 45% ocene
 
     score = int(round(100.0 * final)) #spremeni decimalke v %
 
@@ -135,6 +141,3 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
         "straight_score": straight_score,
         "hints": []
     }
-
-
-
