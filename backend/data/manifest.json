@@ -4,7 +4,7 @@
             "task_id": "vertical_lines",
             "name": "Vertical Lines (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/1.svg",
+            "file": "svgs/Lesson1/Task1/1.svg",
             "difficulty": 1,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
