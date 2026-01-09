@@ -108,7 +108,7 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
     straight_score = None
     if target_angle is not None:
         straight_score = score_straightness(user_strokes_n, float(target_angle), tolerance)
-        final = 0.3 * acc_score + 0.35 * cov_score + 0.35 * straight_score
+        final = 0.3 * acc_score + 0.4 * cov_score + 0.3 * straight_score
     else:
         final = 0.55 * acc_score + 0.45 * cov_score #accuracy = 55% ocene, coverage = 45% ocene
 

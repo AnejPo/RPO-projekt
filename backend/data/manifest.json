@@ -4,7 +4,7 @@
             "task_id": "vertical_lines",
             "name": "Vertical Lines (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/1.svg",
+            "file": "svgs/Lesson1/Task1/1.svg",
             "difficulty": 1,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
@@ -18,7 +18,7 @@
             "task_id":"horizontal_lines",
             "name": "Horizontal Lines (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Lesson1/Task1/2.svg",
+            "file": "svgs/Lesson1/Lesson1/Task1/2.svg",
             "difficulty": 1,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
@@ -32,7 +32,7 @@
             "task_id":"vertical_lines_2",
             "name": "Vertical Lines (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Lesson1/Task1/3.svg",
+            "file": "svgs/Lesson1/Lesson1/Task1/3.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
@@ -46,7 +46,7 @@
             "task_id":"horizontal_lines_2",
             "name": "Horizontal Lines (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Lesson1/Task1/4.svg",
+            "file": "svgs/Lesson1/Lesson1/Task1/4.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
@@ -60,7 +60,7 @@
             "task_id":"right_angle_lines",
             "name": "Angled Lines (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Lesson1/Task1/5.svg",
+            "file": "svgs/Lesson1/Lesson1/Task1/5.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
@@ -74,7 +74,7 @@
             "task_id":"left_angle_lines",
             "name": "Angled Lines (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Lesson1/Task1/7.svg",
+            "file": "svgs/Lesson1/Lesson1/Task1/7.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
@@ -88,7 +88,7 @@
             "task_id":"left_angle_lines_2",
             "name": "Angled Lines (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Lesson1/Task1/8.svg",
+            "file": "svgs/Lesson1/Lesson1/Task1/8.svg",
             "difficulty": 1,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
@@ -102,7 +102,7 @@
             "task_id":"right_angle_lines_2",
             "name": "Horizontal Lines (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Lesson1/Task1/6.svg",
+            "file": "svgs/Lesson1/Lesson1/Task1/6.svg",
             "difficulty": 1,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
@@ -116,7 +116,7 @@
             "task_id":"90_deg_lines",
             "name": "Changing Direction (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Lesson1/Task1/9.svg",
+            "file": "svgs/Lesson1/Lesson1/Task1/9.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can.",
             "params": {
@@ -129,7 +129,7 @@
             "task_id":"zig_zag",
             "name": "Zig Zag (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Lesson1/Task1/10.svg",
+            "file": "svgs/Lesson1/Lesson1/Task1/10.svg",
             "difficulty": 2,
             "Instructions":"Trace theis line as closely as you can.",
             "params": {
