@@ -16,13 +16,21 @@ def create_user_table(connection):
     execute_query(connection, create_user_table_query)
     
 def insert_user(connection, username, name, surname, email, password):
-    insert_user_query = f"""
+    """Vstavi uporabnika v bazo - geslo naj bo že heširano!"""
+    insert_user_query = """
     INSERT INTO
         users (username, name, surname, email, password)
     VALUES
-        ('{username}', '{name}', '{surname}', '{email}', '{password}');
+        (?, ?, ?, ?, ?);
     """
-    execute_query(connection, insert_user_query)
+    cursor = connection.cursor()
+    try:
+        cursor.execute(insert_user_query, (username, name, surname, email, password))
+        connection.commit()
+        print("User inserted successfully")
+    except Error as e:
+        print(f"The error '{e}' occurred")
+        raise
     
 def delete_user(connection, id=None, username=None):
     delete_user_query = f"""
@@ -45,14 +53,15 @@ def get_all_users(connection):
         return []
     
 def get_user_by_username(connection, username):
-    get_user_query = f"""
+    """Poišči uporabnika po uporabniškem imenu"""
+    get_user_query = """
     SELECT *
     FROM users
-    WHERE username = '{username}';
+    WHERE username = ?;
     """
     cursor = connection.cursor()
     try:
-        cursor.execute(get_user_query)
+        cursor.execute(get_user_query, (username,))
         user = cursor.fetchone()
         return user
     except Error as e:
@@ -60,14 +69,15 @@ def get_user_by_username(connection, username):
         return None
     
 def get_user_by_id(connection, id):
-    get_user_query = f"""
+    """Poišči uporabnika po ID-ju"""
+    get_user_query = """
     SELECT *
     FROM users
-    WHERE id = {id};
+    WHERE id = ?;
     """
     cursor = connection.cursor()
     try:
-        cursor.execute(get_user_query)
+        cursor.execute(get_user_query, (id,))
         user = cursor.fetchone()
         return user
     except Error as e:
