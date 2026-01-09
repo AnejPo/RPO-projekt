@@ -137,11 +137,31 @@
                 "tolerance": 0.02,
                 "samples": 500
             }
-        }
+        },
+        {
+            "task_id":"test",
+            "name":"Test perspective",
+            "compare_type":"perspective",
+            "file":"svgs/Perspektiva/PerspektivaTest.svg",
+            "difficulty":"2",
+            "Instructions":"test",
+            "params": {
+                "van_points": 1,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        } 
 
     ],
 
     "lessons": [
+        {
+             "lesson_id":"lesson_perspective",
+            "title": "Test",
+            "text": "lorem ipsum",
+            "tasks": ["test"]
+        },
         {
             "lesson_id": "lesson_intro",
             "title": "First Intro Lesson - Drawing Straight Lines",
@@ -149,5 +169,7 @@
             "tasks": ["vertical_lines", "horizontal_lines", "vertical_lines_2", "horizontal_lines_2", "right_angle_lines", "left_angle_lines",
                         "right_angle_lines_2", "left_angle_lines_2", "90_deg_lines", "zig_zag"]
         }
+        
+
     ]
 }
