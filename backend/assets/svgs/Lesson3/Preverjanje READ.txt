@@ -1,0 +1,4 @@
+Glede preverjanja: vse vodoravne crte morajo biti vzporedne, vse posevne pa izhajajo iz ocisc. 
+Uporabnik bo dobil grid, ki lahko ima eno (izhaja iz sredine) ali dve ocisci (izhaja iz strani).
+Uporabnik bo prav tako dobil risbo iz katere bo izhajal in bo vidna na strani zaslona. 
+Uporabnik bo tako moral z ravnimi crtami cim bolje prerisati model (ne rise cez skico ampak ob njej na grid, ki je na voljo za pomoc). Vsaka crta ki jo narise mora biti ali popolnoma vodoravna ali pa izhaja iz izhodisca (torej ce bi crto podaljsal bi sla skozi ocisce)

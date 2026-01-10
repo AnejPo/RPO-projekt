@@ -4,11 +4,11 @@
             "task_id": "vertical_lines",
             "name": "Vertical Lines (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/1.svg",
+            "file": "svgs/Lesson1/Task1/1.svg",
             "difficulty": 1,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
-                "target_angle_deg": 90,
+                "target_angle_deg": [90],
                 "outlier_percent": 10,
                 "tolerance": 0.03,
                 "samples": 300
@@ -18,11 +18,11 @@
             "task_id":"horizontal_lines",
             "name": "Horizontal Lines (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/2.svg",
+            "file": "svgs/Lesson1/Task1/2.svg",
             "difficulty": 1,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
-                "target_angle_deg": 0,
+                "target_angle_deg": [0],
                 "outlier_percent": 10,
                 "tolerance": 0.03,
                 "samples": 300
@@ -32,11 +32,11 @@
             "task_id":"vertical_lines_2",
             "name": "Vertical Lines (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/3.svg",
+            "file": "svgs/Lesson1/Task1/3.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
-                "target_angle_deg": 90,
+                "target_angle_deg": [90],
                 "outlier_percent": 10,
                 "tolerance": 0.03,
                 "samples": 400
@@ -46,11 +46,11 @@
             "task_id":"horizontal_lines_2",
             "name": "Horizontal Lines (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/4.svg",
+            "file": "svgs/Lesson1/Task1/4.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
-                "target_angle_deg": 0,
+                "target_angle_deg": [0],
                 "outlier_percent": 10,
                 "tolerance": 0.03,
                 "samples": 400
@@ -60,11 +60,11 @@
             "task_id":"right_angle_lines",
             "name": "Angled Lines (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/5.svg",
+            "file": "svgs/Lesson1/Task1/5.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
-                "target_angle_deg": 45,
+                "target_angle_deg": [45],
                 "outlier_percent": 10,
                 "tolerance": 0.03,
                 "samples": 300
@@ -74,11 +74,11 @@
             "task_id":"left_angle_lines",
             "name": "Angled Lines (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/7.svg",
+            "file": "svgs/Lesson1/Task1/7.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
-                "target_angle_deg": 135,
+                "target_angle_deg": [135],
                 "outlier_percent": 10,
                 "tolerance": 0.03,
                 "samples": 300
@@ -88,11 +88,11 @@
             "task_id":"left_angle_lines_2",
             "name": "Angled Lines (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/8.svg",
+            "file": "svgs/Lesson1/Task1/8.svg",
             "difficulty": 1,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
-                "target_angle_deg": 45,
+                "target_angle_deg": [45],
                 "outlier_percent": 10,
                 "tolerance": 0.02,
                 "samples": 400
@@ -102,11 +102,11 @@
             "task_id":"right_angle_lines_2",
             "name": "Horizontal Lines (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/6.svg",
+            "file": "svgs/Lesson1/Task1/6.svg",
             "difficulty": 1,
             "Instructions":"Trace these lines as closely as you can. Watch out for the straightness of your lines!",
             "params": {
-                "target_angle_deg": 135,
+                "target_angle_deg": [45],
                 "outlier_percent": 10,
                 "tolerance": 0.02,
                 "samples": 400
@@ -116,10 +116,11 @@
             "task_id":"90_deg_lines",
             "name": "Changing Direction (Easy)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/9.svg",
+            "file": "svgs/Lesson1/Task1/9.svg",
             "difficulty": 2,
             "Instructions":"Trace these lines as closely as you can.",
             "params": {
+                "target_angle_deg": [90, 0],
                 "outlier_percent": 10,
                 "tolerance": 0.02,
                 "samples": 300
@@ -129,14 +130,77 @@
             "task_id":"zig_zag",
             "name": "Zig Zag (Medium)",
             "compare_type": "tracing",
-            "file": "svgs/Task1/10.svg",
+            "file": "svgs/Lesson1/Task1/10.svg",
             "difficulty": 2,
             "Instructions":"Trace theis line as closely as you can.",
             "params": {
+                "target_angle_deg": [92, 98, 90, 103, 90, 105, 90, 109, 92, 115, 94, 139, 101, 136, 100],
                 "outlier_percent": 10,
-                "tolerance": 0.02,
+                "tolerance": 0.03,
                 "samples": 500
             }
+        },
+        {
+            "task_id":"paralell_1",
+            "name": "Vertical Paralell Lines",
+            "compare_type": "paralell",
+            "file": "svgs/Lesson1/Task2/1.1.svg",
+            "difficulty": 1,
+            "Instructions":"Draw 3 lines paralell to the one already drawn.",
+            "params": {
+                "target_angle_deg": [90],
+                "outlier_percent": 10,
+                "angle_tol_deg": 10,
+                "tolerance": 0.03,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"paralell_2",
+            "name": "Horizontal Paralell Lines",
+            "compare_type": "paralell",
+            "file": "svgs/Lesson1/Task2/2.1.svg",
+            "difficulty": 1,
+            "Instructions":"Draw 3 lines paralell to the one already drawn.",
+            "params": {
+                "target_angle_deg": [0],
+                "outlier_percent": 10,
+                "angle_tol_deg": 10,
+                "tolerance": 0.03,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"paralell_3",
+            "name": "Angled Paralell Lines",
+            "compare_type": "paralell",
+            "file": "svgs/Lesson1/Task2/3.1.svg",
+            "difficulty": 1,
+            "Instructions":"Draw 3 lines paralell to the one already drawn.",
+            "params": {
+                "target_angle_deg": [45],
+                "outlier_percent": 10,
+                "angle_tol_deg": 10,
+                "tolerance": 0.03,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"paralell_4",
+            "name": "Angled Paralell Lines",
+            "compare_type": "paralell",
+            "file": "svgs/Lesson1/Task2/4.1.svg",
+            "difficulty": 1,
+            "Instructions":"Draw 3 lines paralell to the one already drawn.",
+            "params": {
+                "target_angle_deg": [135],
+                "angle_tol_deg": 10,
+                "outlier_percent": 10,
+                "tolerance": 0.03,
+                "samples": 500
+            }
+        }
+        
         },
         {
             "task_id":"test",
@@ -169,8 +233,16 @@
             "text": "lorem ipsum",
             "tasks": ["vertical_lines", "horizontal_lines", "vertical_lines_2", "horizontal_lines_2", "right_angle_lines", "left_angle_lines",
                         "right_angle_lines_2", "left_angle_lines_2", "90_deg_lines", "zig_zag"]
+        },
+        {
+            "lesson_id": "paralell_lines",
+            "title": "Paralell Lines",
+            "text": "Lorem Ipsum",
+            "tasks": ["paralell_1", "paralell_2", "paralell_3", "paralell_4"]
         }
         
 
     ]
+
+    
 }

@@ -5,18 +5,77 @@ from services.svg_processing import denormalize_point
 
 Point = Tuple[float, float]
 
-def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: float, tolerance: float) -> float:
+def split_stroke(stroke: List[Point], angle_threshold_deg: float = 60.0) -> List[List[Point]]:
+    if len(stroke) < 3:
+        return [stroke]
+    
+    segments = []
+    current_segment = [stroke[0], stroke[1]]
+    min_dist = 0.008
+
+    for i in range(2, len(stroke)):
+        p1, p2, p3 = np.array(stroke[i-2]), np.array(stroke[i-1]), np.array(stroke[i])
+        
+        dist = np.linalg.norm(p3 - p1)
+        if dist <= min_dist:
+            continue
+
+        v1 = p2 - p1
+        v2 = p3 - p2
+
+        l1 = np.linalg.norm(v1)
+        l2 = np.linalg.norm(v2)
+
+        if l1 > 0.000001 and l2 > 0.000001: #da ne delim z ničlo
+            #kosinus kota med vektorjema
+            cos_theta = np.dot(v1, v2) / (l1 * l2)
+            #za napake izven [-1, 1]
+            cos_theta = np.clip(cos_theta, -1.0, 1.0)
+            angle = np.degrees(np.arccos(cos_theta))
+
+            if angle > angle_threshold_deg:
+                segments.append(current_segment)
+                current_segment = [stroke[i-1]]
+        
+        current_segment.append(stroke[i])
+
+    segments.append(current_segment)
+    return segments
+
+def get_angle(p1: Point, p2: Point) -> float:
+    """Izračuna kot daljice v stopinjah"""
+    return float(np.degrees(np.arctan2(p2[1] - p1[1], p2[0] - p1[0])) % 180)
+
+def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: list[float], tolerance: float) -> float:
     """
     Vrne oceno med [0...1]. 1 = zlo ravne crte, 0 = zlo neravne crte
     """
 
-    theta = np.deg2rad(target_angle_deg)
-    n = np.array([-np.sin(theta), np.cos(theta)], dtype=np.float32)
-
     wobble_vals = []
-    for stroke in user_strokes_n:
+    straight_segments = []
+
+    if (len(target_angle_deg) == 1):
+        straight_segments = user_strokes_n
+    else:
+        for stroke in user_strokes_n:
+            straight_segments.extend(split_stroke(stroke))
+
+    for stroke in straight_segments:
         if len(stroke) < 5:
             continue
+
+        actual_angle = get_angle(stroke[0], stroke[-1])
+        diffs = []
+        for t in target_angle_deg:
+            d = abs(t - actual_angle)
+            diffs.append(min(d, 180 - d))
+
+        #lambda samo pogleda, kateri kot ima iz manifesta ima najmanjšo razliko z uporabniškim kotom
+        best_target_angle = target_angle_deg[np.argmin(diffs)]
+
+        theta = np.deg2rad(best_target_angle)
+        n = np.array([-np.sin(theta), np.cos(theta)], dtype=np.float32)
+
         P = np.asarray(stroke, dtype=np.float32)
         perp = P @ n
         wobble = float(np.std(perp))
@@ -27,7 +86,7 @@ def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: floa
     
     wobble_mean = float(np.mean(wobble_vals))
 
-    s = 1.0 - (wobble_mean / (tolerance / 2.0))
+    s = 1.0 - (wobble_mean / (tolerance * 5.0))
     return float(max(0.0, min(1.0, s)))
 
 def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: List[List[Point]], user_tf: dict[str, float]) -> dict:
@@ -72,7 +131,7 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
     tolerance = params.get("tolerance", 0.05)
     samples = params.get("samples")
     outlier_percent = params.get("outlier_percent", 10.0)
-    target_angle = params.get("target_angle_deg")
+    target_angle = params.get("target_angle_deg", [])
     heatmap_points = 50
 
     T = np.asarray(T_pts, dtype=np.float32)
@@ -107,8 +166,8 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
 #RAVNOST
     straight_score = None
     if target_angle is not None:
-        straight_score = score_straightness(user_strokes_n, float(target_angle), tolerance)
-        final = 0.3 * acc_score + 0.35 * cov_score + 0.35 * straight_score
+        straight_score = score_straightness(user_strokes_n, target_angle, tolerance)
+        final = 0.35 * acc_score + 0.35 * cov_score + 0.3 * straight_score
     else:
         final = 0.55 * acc_score + 0.45 * cov_score #accuracy = 55% ocene, coverage = 45% ocene
 
@@ -124,6 +183,11 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
         yn = float(U[i, 1])
         x_raw, y_raw = denormalize_point(xn, yn, user_tf)
         errors.append({"x": float(x_raw), "y": float(y_raw), "e": float(d_u[i])})
+    
+    num_original = len(user_strokes_n)
+    straight_parts = []
+    for s in user_strokes_n:
+        straight_parts.extend(split_stroke(s))
 
 
     return{
@@ -133,6 +197,10 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
         "max_error": p90_u,
         "errors": errors,
         "straight_score": straight_score,
+        "debug_info": {
+            "original_strokes": num_original,
+            "split_segments": len(straight_parts)
+        },
         "hints": []
     }
 
