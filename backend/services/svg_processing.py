@@ -1,10 +1,12 @@
 from __future__ import annotations
-from typing import List, Tuple
+from typing import List, Tuple, Optional
+import re
 import xml.etree.ElementTree as ET
 from svgpathtools import parse_path #dependency
 import math
 
 Point = Tuple[float, float]
+Matrix = Tuple[float, float, float, float, float, float]
 
 def svg_string_to_stroke(svg_text: str, samples: int = 300) -> List[List[Point]]:
     """
@@ -51,6 +53,18 @@ def svg_string_to_stroke(svg_text: str, samples: int = 300) -> List[List[Point]]
             ry = float(elem.attrib.get("ry", 0.0))
 
             pts = sample_ellipse(cx, cy, rx, ry, samples)
+            if(elem.attrib.get("transform")):
+                pts = apply_transform_to_points(pts, elem.attrib.get("transform"))
+            if pts:
+                strokes.append(pts)
+        
+        elif is_tag(elem, "circle"):
+            r = float(elem.attrib.get("r"))
+            cx = float(elem.attrib.get("cx", 0.0))
+            cy = float(elem.attrib.get("cy", 0.0))
+            pts = sample_circle(cx, cy, r, samples)
+            if(elem.attrib.get("transform")):
+                pts = apply_transform_to_points(pts, elem.attrib.get("transform"))
             if pts:
                 strokes.append(pts)
 
@@ -62,6 +76,8 @@ def svg_string_to_stroke(svg_text: str, samples: int = 300) -> List[List[Point]]
             h = float(elem.attrib.get("height", 0.0))
 
             pts = sample_rect(x,y,w,h,samples)
+            if(elem.attrib.get("transform")):
+                pts = apply_transform_to_points(pts, elem.attrib.get("transform"))
             if pts:
                 strokes.append(pts)
 
@@ -198,6 +214,9 @@ def normalize_points(points: List[Point]) -> List[Point]:
         return [(0.0, 0.0) for _ in points]
     
     return [((x-cx)/scale, (y-cy)/scale) for (x,y) in points]
+
+def sample_circle(cx: float, cy: float, r: float, samples: int) -> List[Point]:
+    return sample_ellipse(cx, cy, r, r, samples)
     
 def sample_ellipse(cx: float, cy: float, rx:float, ry:float, samples:int) -> List[Point]:
     if samples <= 0 or rx <= 0 or ry <= 0:
@@ -212,11 +231,96 @@ def sample_ellipse(cx: float, cy: float, rx:float, ry:float, samples:int) -> Lis
         pts.append((x,y))
     return pts
 
-def sample_rect(x:float, y:float, w:float, h:float, samples:int) -> List[Point]:
-    pts: List[Point]
+def mat_mul(A: Matrix, B: Matrix) -> Matrix:
+    a1,b1,c1,d1,e1,f1 = A
+    a2,b2,c2,d2,e2,f2 = B
+    return (
+        a1*a2 + c1*b2,
+        b1*a2 + d1*b2,
+        a1*c2 + c1*d2,
+        b1*c2 + d1*d2,
+        a1*e2 + c1*f2 + e1,
+        b1*e2 + d1*f2 + f1
+    )
 
-    if samples <= 0 or w <= 0 or h <= 0:
+def rotate_deg(angle: float) -> Matrix:
+    r = math.radians(angle)
+    ca, sa = math.cos(r), math.sin(r)
+    return (ca, sa, -sa, ca, 0.0, 0.0)
+
+def parse_transform(transform: Optional[str]) -> Optional[Matrix]:
+    if not transform:
+        return None
+
+    items = re.findall(r"([a-zA-Z]+)\(([^)]*)\)", transform)
+    if not items:
+        return None
+
+    M: Matrix = (1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+
+    for name, args_str in items:
+        parts = [p for p in re.split(r"[,\s]+", args_str.strip()) if p]
+        nums = list(map(float, parts)) if parts else []
+
+        name = name.lower()
+
+        if name == "matrix" and len(nums) == 6:
+            T = (nums[0], nums[1], nums[2], nums[3], nums[4], nums[5])
+
+        elif name == "translate":
+            tx = nums[0] if len(nums) >= 1 else 0.0
+            ty = nums[1] if len(nums) >= 2 else 0.0
+            T = translate(tx, ty)
+
+        elif name == "rotate":
+            if len(nums) == 1:
+                T = rotate_deg(nums[0])
+            elif len(nums) == 3:
+                ang, cx, cy = nums
+                T = mat_mul(mat_mul(translate(cx, cy), rotate_deg(ang)), translate(-cx, -cy))
+            else:
+                continue
+
+        elif name == "scale":
+            sx = nums[0] if len(nums) >= 1 else 1.0
+            sy = nums[1] if len(nums) >= 2 else sx
+            T = (sx, 0.0, 0.0, sy, 0.0, 0.0)
+
+        else:
+            continue  # ignore unsupported transforms for now
+
+        # SVG applies transforms left-to-right
+        M = mat_mul(M, T)
+
+    return M
+
+def translate(tx: float, ty: float) -> Matrix:
+    return (1.0, 0.0, 0.0, 1.0, tx, ty)
+
+def parse_matrix(transform: Optional[str]) -> Optional[Tuple[float, float, float, float, float, float]]:
+    if not transform:
+        return None
+    m = re.search(r"matrix\(\s*([-\d.eE]+)\s*,\s*([-\d.eE]+)\s*,\s*([-\d.eE]+)\s*,\s*([-\d.eE]+)\s*,\s*([-\d.eE]+)\s*,\s*([-\d.eE]+)\s*\)", transform)
+    if not m:
+        return None
+    return tuple(float(m.group(i)) for i in range(1, 7))
+
+def apply_matrix(pt: tuple[float, float], M: Matrix) -> tuple[float, float]:
+    x, y = pt
+    a, b, c, d, e, f = M
+    return (a*x + c*y + e, b*x + d*y + f)
+
+def apply_transform_to_points(pts, transform: Optional[str]):
+    M = parse_transform(transform)
+    if not M:
         return pts
+    return [apply_matrix(p, M) for p in pts]
+
+def sample_rect(x:float, y:float, w:float, h:float, samples:int) -> List[Point]:
+    if samples <= 0 or w <= 0 or h <= 0:
+        return []
+
+    pts: List[Point] = []
 
     per_edge = max(2, samples // 4)
 

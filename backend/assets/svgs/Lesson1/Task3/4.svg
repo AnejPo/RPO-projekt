@@ -2,18 +2,18 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="99.739471mm"
-   height="51.542107mm"
-   viewBox="0 0 99.739471 51.542107"
+   width="53.105259mm"
+   height="53.105278mm"
+   viewBox="0 0 53.105259 53.105278"
    version="1.1"
    id="svg1"
-   xml:space="preserve"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
-   sodipodi:docname="4.svg"
+   sodipodi:docname="9.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
      id="namedview1"
      pagecolor="#ffffff"
      bordercolor="#000000"
@@ -24,22 +24,24 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="1.0155724"
-     inkscape:cx="265.85993"
-     inkscape:cy="482.48653"
+     inkscape:cx="182.16328"
+     inkscape:cy="182.16328"
      inkscape:window-width="2560"
      inkscape:window-height="1374"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" /><defs
-     id="defs1" /><g
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-34.671051,-20.863155)"><ellipse
-       style="fill:none;stroke:#d32e2e;stroke-width:1"
-       id="path1"
-       cx="84.540787"
-       cy="46.634209"
-       rx="49.369736"
-       ry="25.271053" /></g></svg>
+     transform="translate(-57.076313,-100.32368)">
+    <path
+       id="rect1"
+       style="fill:none;stroke:#d32e2e"
+       d="m 57.576313,100.82368 h 52.105257 v 52.10528 H 57.576313 Z" />
+  </g>
+</svg>

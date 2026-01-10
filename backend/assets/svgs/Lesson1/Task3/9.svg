@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="53.105259mm"
-   height="53.105278mm"
-   viewBox="0 0 53.105259 53.105278"
+   width="102.20047mm"
+   height="49.904461mm"
+   viewBox="0 0 102.20047 49.904461"
    version="1.1"
    id="svg1"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
-   sodipodi:docname="9.svg"
+   sodipodi:docname="16.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,8 +24,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="1.0155724"
-     inkscape:cx="181.17862"
-     inkscape:cy="182.16328"
+     inkscape:cx="376.14256"
+     inkscape:cy="398.78989"
      inkscape:window-width="2560"
      inkscape:window-height="1374"
      inkscape:window-x="-8"
@@ -38,13 +38,10 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-57.076313,-100.32368)">
-    <rect
+     transform="translate(-5.4027732,-43.079338)">
+    <path
        style="fill:none;stroke:#d32e2e;stroke-width:1"
-       id="rect1"
-       width="52.105259"
-       height="52.105278"
-       x="57.576313"
-       y="100.82368" />
+       d="M 29.960525,43.76842 6.2526314,81.284208 107.33684,92.486841 Z"
+       id="path1" />
   </g>
 </svg>
