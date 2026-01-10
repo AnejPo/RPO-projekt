@@ -9,6 +9,19 @@ let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
+// VARIJABLE ALATA ZA CRTE
+let currentTool = 'brush'; // 'brush' ali 'line'
+let isDrawingLine = false;
+let lineStartX = 0;
+let lineStartY = 0;
+let tempCanvas = null;
+let tempCtx = null;
+
+// globalna varijabla za debljinu črte 
+if (typeof window.currentLineWidth === 'undefined') {
+    window.currentLineWidth = 2;
+}
+
 // UI debug elementi
 let drawingStatusElem;
 let positionTextElem;
@@ -59,6 +72,12 @@ function initCanvas() {
         alert('Canvas ni podprt v tem brskalniku!');
         throw new Error('Canvas not supported');
     }
+
+    // Inicijaliziraj temp canvas za line preview
+    tempCanvas = document.createElement('canvas');
+    tempCanvas.width = canvas.width;
+    tempCanvas.height = canvas.height;
+    tempCtx = tempCanvas.getContext('2d');
 
     drawingStatusElem = document.getElementById('drawingStatus');
     positionTextElem = document.getElementById('positionText');
@@ -126,71 +145,127 @@ function handlePointerDown(e) {
     e.preventDefault();
     canvas.setPointerCapture?.(e.pointerId);
 
-    isDrawing = true;
-
     const pos = getMousePos(e);
-    lastX = pos.x;
-    lastY = pos.y;
 
-    const style = getCurrentBrushStyle();
+    if (currentTool === 'line') {
+        // ALAT ZA CRTE - spremi početnu točku
+        isDrawingLine = true;
+        lineStartX = pos.x;
+        lineStartY = pos.y;
+        updateDrawingStatus(true);
+    } else {
+        // ALAT ZA ČOPIČ - postojeća logika
+        isDrawing = true;
+        lastX = pos.x;
+        lastY = pos.y;
 
-    ctx.strokeStyle = style.strokeStyle;
-    ctx.lineWidth = style.lineWidth;
-    ctx.lineCap = style.lineCap;
-    ctx.lineJoin = style.lineJoin;
+        const style = getCurrentBrushStyle();
 
-    // nova poteza – redo buffer se izbriše
-    redoBuffer = [];
+        ctx.strokeStyle = style.strokeStyle;
+        ctx.lineWidth = style.lineWidth;
+        ctx.lineCap = style.lineCap;
+        ctx.lineJoin = style.lineJoin;
 
-    currentStroke = {
-        points: [{ x: pos.x, y: pos.y }],
-        color: style.strokeStyle,
-        width: style.lineWidth
-    };
+        // nova poteza – redo buffer se izbriše
+        redoBuffer = [];
 
-    updateDrawingStatus(true);
+        currentStroke = {
+            points: [{ x: pos.x, y: pos.y }],
+            color: style.strokeStyle,
+            width: style.lineWidth
+        };
+
+        updateDrawingStatus(true);
+    }
 }
 
 function handlePointerMove(e) {
     e.preventDefault();
     const pos = getMousePos(e);
-    if (pos.x === lastX && pos.y === lastY) return;
 
     if (positionTextElem) {
         positionTextElem.textContent = `X: ${pos.x.toFixed(0)}, Y: ${pos.y.toFixed(0)}`;
     }
 
-    if (!isDrawing) return;
+    if (currentTool === 'line' && isDrawingLine) {
+        // ALAT ZA CRTE - preview crte dok se vući
+        redrawFromHistory();
+        
+        // Koristi getStrokeColor() ako je dostupna (za hue/opacity)
+        const strokeColor = typeof getStrokeColor === 'function' ? getStrokeColor() : '#000000';
+        
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = window.currentLineWidth;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        ctx.beginPath();
+        ctx.moveTo(lineStartX, lineStartY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        ctx.closePath();
+    } else if (isDrawing) {
+        // ALAT ZA ČOPIČ - obstojeca logika
+        if (pos.x === lastX && pos.y === lastY) return;
 
-    const style = getCurrentBrushStyle();
+        const style = getCurrentBrushStyle();
 
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    
-    currentStroke.points.push({ x: pos.x, y: pos.y });
-    lastX = pos.x;
-    lastY = pos.y;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+        
+        currentStroke.points.push({ x: pos.x, y: pos.y });
+        lastX = pos.x;
+        lastY = pos.y;
+    }
 }
 
 function handlePointerUp(e) {
     e.preventDefault();
-    if (!isDrawing) return;
-
     canvas.releasePointerCapture?.(e.pointerId);
 
-    isDrawing = false;
-    ctx.closePath();
-    
-    if (currentStroke && currentStroke.points.length > 1) {
-        drawingHistory.push(currentStroke);
-    }
-    
-    currentStroke = null;
-    redrawFromHistory(); /*tole je workaround, specifično za opacity, ki odstrani overlapping*/ 
+    if (currentTool === 'line' && isDrawingLine) {
+        // ALAT ZA CRTE - shrani crtu v history
+        isDrawingLine = false;
+        
+        // Uporabljaj getStrokeColor() ce je dostupn (za hue/opacity)
+        const strokeColor = typeof getStrokeColor === 'function' ? getStrokeColor() : '#000000';
+        
+        // zračunaj koordinate iz CSS u canvas
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const endX = (e.clientX - rect.left) * scaleX;
+        const endY = (e.clientY - rect.top) * scaleY;
+        
+        const lineStroke = {
+            points: [
+                { x: lineStartX, y: lineStartY },
+                { x: endX, y: endY }
+            ],
+            color: strokeColor,
+            width: window.currentLineWidth
+        };
+        
+        redoBuffer = [];
+        drawingHistory.push(lineStroke);
+        redrawFromHistory();
+        updateDrawingStatus(false);
+    } else if (isDrawing) {
+        // ALAT ZA ČOPIČ - obstojeca logika
+        isDrawing = false;
+        ctx.closePath();
+        
+        if (currentStroke && currentStroke.points.length > 1) {
+            drawingHistory.push(currentStroke);
+        }
+        
+        currentStroke = null;
+        redrawFromHistory(); // To je workaround, specifično za opacity koji uklanja preklapanja
 
-    updateDrawingStatus(false);
+        updateDrawingStatus(false);
+    }
 }
 
 // ====== CLEAR ======
@@ -555,3 +630,22 @@ ${paths}
 }
 
 console.log('drawingHistory ready for SVG export');
+
+// ====== FUNKCIJE ZA ALAT CRTE ======
+
+function setCurrentTool(tool) {
+    currentTool = tool;
+    console.log('Trenutni alat nastavljen na:', tool);
+    
+    const lineBtn = document.getElementById('lineToolBtn');
+    
+    if (lineBtn) {
+        if (tool === 'line') {
+            lineBtn.classList.add('active');
+        } else {
+            lineBtn.classList.remove('active');
+        }
+    }
+}
+
+window.setCurrentTool = setCurrentTool;
