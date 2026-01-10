@@ -126,7 +126,7 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
     samples = params.get("samples")
     outlier_percent = params.get("outlier_percent", 10.0)
     target_angle = params.get("target_angle_deg", [])
-    angle_tol_deg = params.get("angle_tol_deg")
+    angle_tol_deg = params.get("angle_tol_deg", 10.0)
     heatmap_points = 50
 
 #RAVNOST
