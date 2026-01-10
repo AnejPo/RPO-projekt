@@ -1,28 +1,66 @@
 const Auth = {
-    // Pridobi token iz localStorage
-    getToken() {
-        return localStorage.getItem('authToken');
+    // Helper funkcija za upravljanje piškotkov
+    setCookie(name, value, days = 7) {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
     },
 
-    // Shrani token v localStorage
+    getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    },
+
+    deleteCookie(name) {
+        document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+    },
+
+    // Pridobi token iz cookies
+    getToken() {
+        // Najprej poskusi firefox način potem pa chrome način
+        const cookieToken = this.getCookie('authToken');
+        const localToken = localStorage.getItem('authToken');
+        const token = cookieToken || localToken;
+        console.log('Retrieved token:', token, '(cookie:', cookieToken, 'local:', localToken, ')');
+        return token;
+    },
+
+    // Shrani token v cookies in localStorage
     setToken(token) {
+        this.setCookie('authToken', token, 7);
         localStorage.setItem('authToken', token);
     },
 
-    // Odstrani token iz localStorage
+    // Odstrani token iz cookies in localStorage
     removeToken() {
+        this.deleteCookie('authToken');
+        this.deleteCookie('user');
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
     },
 
-    // Dobi user informacije iz localStorage
+    // Dobi user informacije iz cookies ali localStorage
     getUser() {
-        const userStr = localStorage.getItem('user');
-        return userStr ? JSON.parse(userStr) : null;
+        const cookieUser = this.getCookie('user');
+        const localUser = localStorage.getItem('user');
+        
+        if (cookieUser) {
+            return JSON.parse(decodeURIComponent(cookieUser));
+        } else if (localUser) {
+            return JSON.parse(localUser);
+        }
+        return null;
     },
 
-    // Shrani uporabniške informacije
+    // Shrani uporabniške informacije in cookies in localStorage
     setUser(user) {
+        this.setCookie('user', encodeURIComponent(JSON.stringify(user)), 7);
         localStorage.setItem('user', JSON.stringify(user));
     },
 
@@ -33,6 +71,7 @@ const Auth = {
 
     // Preveri veljavnost tokena
     async verifyToken() {
+        
         const token = this.getToken();
         if (!token) return false;
 
@@ -140,15 +179,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 const data = await response.json();
+                console.log('Login response:', data);
 
                 if (response.ok && data.success) {
+                    console.log('Token from server:', data.token);
+                    
                     // Shrani token in uporabnika
                     Auth.setToken(data.token);
                     Auth.setUser(data.user);
 
+                    // Verify cookie write completed
+                    const savedToken = Auth.getToken();
+                    console.log('Token saved:', savedToken);
+                    
+                    if (!savedToken) {
+                        showAlert('Napaka pri shranjevanju. Poskusite znova.', 'danger');
+                        return;
+                    }
+
                     showAlert('Prijava uspešna! Preusmerjanje...', 'success');
                     
-                    // Preusmeri na glavno stran
+                    // Redirect immediately since cookies are synchronous
                     setTimeout(() => {
                         Auth.redirectToHome();
                     }, 1000);
