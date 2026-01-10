@@ -201,10 +201,32 @@
             }
         }
         
+        },
+        {
+            "task_id":"test",
+            "name":"Test perspective",
+            "compare_type":"perspective",
+            "file":"svgs/Perspektiva/Perspektiva.svg",
+            "reference": "svgs/perspektivaTest.svg",
+            "difficulty":"2",
+            "Instructions":"test",
+            "params": {
+                "van_points": 1,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        } 
 
     ],
 
     "lessons": [
+        {
+             "lesson_id":"lesson_perspective",
+            "title": "Test",
+            "text": "lorem ipsum",
+            "tasks": ["test"]
+        },
         {
             "lesson_id": "lesson_intro",
             "title": "First Intro Lesson - Drawing Straight Lines",
@@ -218,6 +240,8 @@
             "text": "Lorem Ipsum",
             "tasks": ["paralell_1", "paralell_2", "paralell_3", "paralell_4"]
         }
+        
+
     ]
 
     

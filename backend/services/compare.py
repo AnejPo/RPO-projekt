@@ -82,7 +82,8 @@ def compare_svg(task: dict, user_svg: str) -> dict:
     elif compare_type == "perspective":
         return perspective.compare(
             task,
-            template_strokes_n, user_strokes_n
+            template_strokes_n, user_strokes_n,
+            user_tf
         )
     
     elif compare_type == "shading":

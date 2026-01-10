@@ -301,6 +301,19 @@ async function safeInitLessonPage() {
         if (typeof initColorUI === 'function') {
             initColorUI();
         }
+        if (typeof initLineWidthUI === 'function') {
+            initLineWidthUI();
+        }
+
+        // Dodaj event listener za brush button - postavi tool na 'brush'
+        const brushBtn = document.getElementById('currentBrushButton');
+        if (brushBtn) {
+            brushBtn.addEventListener('click', () => {
+                if (typeof setCurrentTool === 'function') {
+                    setCurrentTool('brush');
+                }
+            });
+        }
 
         const submitBtn = document.getElementById('submitBtn');
         if (submitBtn) {
@@ -356,13 +369,28 @@ async function handleSubmitDrawing() {
         console.log('[submitDrawing] rezultat:', result);
 
         const scoreEl = document.getElementById('scoreValue');
+        const hintsContainer = document.getElementById('hintsContainer');
+        
+        // ne dovoli oddaje prazne risbe
+        if (result.score === 0 && (!result.errors || result.errors.length === 0)) {
+            if (hintsContainer) {
+                hintsContainer.innerHTML = '';
+                const div = document.createElement('div');
+                div.className = 'alert alert-danger py-2';
+                div.textContent = 'Prazne risbe ni mogoče oddati!';
+                div.style.color = 'red';
+                div.style.fontWeight = 'bold';
+                hintsContainer.appendChild(div);
+            }
+            return;
+        }
+
         if (scoreEl && typeof result.score !== 'undefined') {
             scoreEl.textContent = result.score.toFixed
                 ? result.score.toFixed(2)
                 : String(result.score);
         }
 
-        const hintsContainer = document.getElementById('hintsContainer');
         if (hintsContainer) {
             hintsContainer.innerHTML = '';
             if (Array.isArray(result.hints)) {

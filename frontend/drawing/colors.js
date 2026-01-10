@@ -145,6 +145,9 @@ function initColorUI(allowedColors = null) {
 
         btn.addEventListener('click', () => {
             setCurrentColor(color.hex);
+            if (typeof setCurrentTool === 'function') {
+                setCurrentTool('brush');
+            }
         });
 
         li.appendChild(btn);
@@ -156,12 +159,28 @@ function initColorUI(allowedColors = null) {
 }
 
 const opacitySlider = document.getElementById('opacitySlider');
-if (opacitySlider) {
+const checkOpacity = document.getElementById('useOpacity');
+if (opacitySlider && checkOpacity) {
     opacitySlider.addEventListener('input', e => {
-        currentOpacity = parseFloat(e.target.value);
-        setCurrentColor(currentHex);
+        if (checkOpacity.checked){
+            currentOpacity = parseFloat(e.target.value);
+            setCurrentColor(currentHex);
+        }
     })
 }
+
+opacitySlider.style.display = 'none';
+
+checkOpacity.addEventListener('change', e => {
+    opacitySlider.style.display = checkOpacity.checked ? 'block' : 'none';
+    if (!checkOpacity.checked) {
+        currentOpacity = 1.0;
+        setCurrentColor(currentHex);
+    } else {
+        currentOpacity = parseFloat(opacitySlider.value);
+        setCurrentColor(currentHex);
+    }
+})
 
 const hueSlider = document.getElementById('hueSlider');
 if (hueSlider) {

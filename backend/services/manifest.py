@@ -58,7 +58,7 @@ def find_lesson(manifest: dict, lesson_id: str) -> dict | None:
 
     for item in tasks:
         #lesson_id = id in manifest
-        if item.get("task_id") == lesson_id:
+        if item.get("lesson_id") == lesson_id:
             return item
         
     return None
