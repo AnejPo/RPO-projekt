@@ -6,6 +6,8 @@ from services.svg_processing import denormalize_point
 Point = Tuple[float, float]
 
 def split_stroke(stroke: List[Point], angle_threshold_deg: float = 60.0) -> List[List[Point]]:
+    MIN_SEG_POINTS = 6
+
     if len(stroke) < 3:
         return [stroke]
     
@@ -17,14 +19,14 @@ def split_stroke(stroke: List[Point], angle_threshold_deg: float = 60.0) -> List
         p1, p2, p3 = np.array(stroke[i-2]), np.array(stroke[i-1]), np.array(stroke[i])
         
         dist = np.linalg.norm(p3 - p1)
-        if dist <= min_dist:
-            continue
-
         v1 = p2 - p1
         v2 = p3 - p2
-
         l1 = np.linalg.norm(v1)
         l2 = np.linalg.norm(v2)
+
+        if l1 <= 1e-6 or l2 <= 1e-6:
+            current_segment.append(stroke[i])
+            continue
 
         if l1 > 0.000001 and l2 > 0.000001: #da ne delim z ničlo
             #kosinus kota med vektorjema
@@ -33,7 +35,7 @@ def split_stroke(stroke: List[Point], angle_threshold_deg: float = 60.0) -> List
             cos_theta = np.clip(cos_theta, -1.0, 1.0)
             angle = np.degrees(np.arccos(cos_theta))
 
-            if angle > angle_threshold_deg:
+            if angle > angle_threshold_deg and len(current_segment) >= MIN_SEG_POINTS:
                 segments.append(current_segment)
                 current_segment = [stroke[i-1]]
         
@@ -61,7 +63,8 @@ def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: list
             straight_segments.extend(split_stroke(stroke))
 
     for stroke in straight_segments:
-        if len(stroke) < 5:
+        if len(stroke) < 3:
+            print(len(stroke))
             continue
 
         actual_angle = get_angle(stroke[0], stroke[-1])
@@ -85,6 +88,10 @@ def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: list
         return 0.0
     
     wobble_mean = float(np.mean(wobble_vals))
+
+    print("wobbles:", wobble_vals[:10])
+    print("wobble_mean:", wobble_mean)
+    print("tolerance:", tolerance, "tolerance*5:", tolerance * 5.0)
 
     s = 1.0 - (wobble_mean / (tolerance * 5.0))
     return float(max(0.0, min(1.0, s)))
@@ -172,6 +179,8 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
         final = 0.55 * acc_score + 0.45 * cov_score #accuracy = 55% ocene, coverage = 45% ocene
 
     score = int(round(100.0 * final)) #spremeni decimalke v %
+
+    #print(f"Nat: {acc_score}" + f" Cov: {cov_score} " + f"Str: {straight_score}")
 
     #NAJVECJE NAPAKE
     k = min(max(1, heatmap_points), len(d_u)) #koliko najhujsih tock bomo pokazali
