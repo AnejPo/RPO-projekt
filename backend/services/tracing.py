@@ -46,7 +46,7 @@ def get_angle(p1: Point, p2: Point) -> float:
     """Izračuna kot daljice v stopinjah"""
     return float(np.degrees(np.arctan2(p2[1] - p1[1], p2[0] - p1[0])) % 180)
 
-def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: [float], tolerance: float) -> float:
+def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: list[float], tolerance: float) -> float:
     """
     Vrne oceno med [0...1]. 1 = zlo ravne crte, 0 = zlo neravne crte
     """

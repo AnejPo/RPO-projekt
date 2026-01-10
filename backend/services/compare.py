@@ -1,4 +1,4 @@
-from services import perspective, body_parts, shading, tracing
+from services import perspective, body_parts, shading, tracing, paralell
 from pathlib import Path
 from services.svg_processing import svg_string_to_points, normalize_points, svg_string_to_stroke, normalize_strokes, normalize_strokes_with_tf
 
@@ -89,6 +89,12 @@ def compare_svg(task: dict, user_svg: str) -> dict:
         return shading.compare(
             task,
             template_strokes_n, user_strokes_n
+        )
+    elif compare_type == "paralell":
+        return paralell.compare(
+            task,
+            template_strokes_n, user_strokes_n,
+            user_tf
         )
 
     else:
