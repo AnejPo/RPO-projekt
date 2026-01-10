@@ -199,9 +199,8 @@
                 "tolerance": 0.03,
                 "samples": 500
             }
-        }
-        
         },
+        
         {
             "task_id":"test",
             "name":"Test perspective",
