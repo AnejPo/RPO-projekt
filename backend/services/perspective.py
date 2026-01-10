@@ -9,6 +9,19 @@ def get_angle(p1: Point, p2: Point) -> float:
     return float(np.degrees(np.arctan2(p1[1] - p2[1], p1[0] - p2[0])) % 180)
 
 def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: List[List[Point]], user_tf: dict[str, float]) -> dict:
+    """
+    Preverja, če so narisane črte usmerjene proti izhodišču, navpične ali pa vzporedne
+    
+    :param task: Vaja, ki jo ocenjujemo
+    :type task: dict
+    :param template_points_n: Normalizirane točke originalne risbe
+    :type template_points_n: List[Point]
+    :param user_pts_n: Normalizirane točke uporabnikove risbe
+    :type user_pts_n: List[Point]
+    :return: Ocena celotne prespektive
+    :rtype: dict
+    """
+
     try:
         params = task.get("params", {})
         van_count = params.get("van_points", 1)
