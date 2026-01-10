@@ -146,7 +146,7 @@
             "compare_type": "paralell",
             "file": "svgs/Lesson1/Task2/1.svg",
             "difficulty": 1,
-            "Instructions":"In this part of the lesson you will see pairs of dots. Place your pen on the first dot, look at the second one and connect them with a single line.\n\nTip:For better results keep your eyes focused on the second dot while drawing.",
+            "Instructions":"In this part of the lesson you will see pairs of dots. Place your pen on the first dot, look at the second one and connect them with a single line.\n\nTip: For better results keep your eyes focused on the second dot while drawing.",
             "params": {
                 "target_angle_deg": [90],
                 "outlier_percent": 10,
@@ -161,7 +161,7 @@
             "compare_type": "paralell",
             "file": "svgs/Lesson1/Task2/2.svg",
             "difficulty": 1,
-            "Instructions":"Draw paralell lines according to the example.",
+            "Instructions":"Draw paralell lines according to the example.\nTip: Avoid stopping or correcting mid-line. A single, continuous stroke will produce a better result then multiple small adjustments.",
             "params": {
                 "target_angle_deg": [0],
                 "outlier_percent": 10,
@@ -176,7 +176,7 @@
             "compare_type": "paralell",
             "file": "svgs/Lesson1/Task2/3.svg",
             "difficulty": 1,
-            "Instructions":"Draw 3 lines paralell to the one already drawn.",
+            "Instructions":"Draw paralell lines according to the example.\nTip: Try to stop exactly at the target dot - control at the end of the stroke is just as important as the start.",
             "params": {
                 "target_angle_deg": [45],
                 "outlier_percent": 10,
@@ -191,7 +191,7 @@
             "compare_type": "paralell",
             "file": "svgs/Lesson1/Task2/41.svg",
             "difficulty": 1,
-            "Instructions":"Draw 3 lines paralell to the one already drawn.",
+            "Instructions":"Draw paralell lines according to the example.\n Tip: If you struggle with a certain orientation, make sure to return and repeat the exercise until it's not a problem anymore. Consistence is key!",
             "params": {
                 "target_angle_deg": [135],
                 "angle_tol_deg": 10,
@@ -201,20 +201,279 @@
             }
         },
         {
-            "task_id":"test",
-            "name":"Test perspective",
+            "task_id":"circle_big",
+            "name":"Big Circle",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/1.svg",
+            "difficulty":2,
+            "Instructions":"Try your best to trace the shape below.\n\nTip: Make sure you finish the circle on the starting point. Control at the end of a stroke is really important.",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"circle_small",
+            "name":"Small Circle",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/2.svg",
+            "difficulty":1,
+            "Instructions":"Try your best to trace the shape below.\n\nNow that drawing straight lines freehand feels more natural, it's time to move on to shapes. Do your best!",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"ellipse_horizontal",
+            "name":"Horizontal Ellipse",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/3.svg",
+            "difficulty":3,
+            "Instructions":"Try your best to trace the shape below.\n\nTip: Make sure to draw with one continuous line and connect the begining with the end of the line.",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"ellipse_vertical",
+            "name":"Vertical Ellipse",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/11.svg",
+            "difficulty":2,
+            "Instructions":"Try your best to trace the shape below.\n\nTip: Keep practicing until you can confidently draw the ellipse in one stroke.",
+            "params": {
+                "angle_tol_deg": 10,
+                "target_angle_deg":[90],
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"square_small",
+            "name":"Small Square",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/4.svg",
+            "difficulty":1,
+            "Instructions":"Try your best to trace the shape below.\n\nTip: Make sure the lines are as straight as possible and that the andgles are right.",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"square_big",
+            "name":"Big Square",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/5.svg",
+            "difficulty":2,
+            "Instructions":"Try your best to trace the shape below.",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"rectangles_vertical",
+            "name":"Vertical Rectangles",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/6.svg",
+            "difficulty":2,
+            "Instructions":"This time, let's try multiple shapes. Do your best to be as accurate as possible!",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"rectangles_diagonal",
+            "name":"Diagonal Rectangles",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/7.svg",
+            "difficulty":2,
+            "Instructions":"Try your best to trace the shapes below.\n\nTip: if you find diagonals challenging you can always turn your tablet so it's easier to freely move your wrist.",
+            "params": {
+                "target_angle_deg":[135, 45],
+                "tolerance": 0.03,
+                "angle_tol_deg": 10,
+                "outlier_percent": 10,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"rectangles_horizontal",
+            "name":"Horizontal Rectangles",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/8.svg",
+            "difficulty":2,
+            "Instructions":"Try your best to trace the shapes below.",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"triangle",
+            "name":"Triangle",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task3/9.svg",
+            "difficulty":1,
+            "Instructions":"Try your best to trace the shape below.",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"cube",
+            "name":"Cube",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task4/1.svg",
+            "difficulty":2,
+            "Instructions":"One of the most important skills for an artist is understanding three-dimensional space.\nThe following exercises will help you become more comfortable drawing objects with depth and form. Do your best!",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"pyramid",
+            "name":"Pyramid",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task4/2.svg",
+            "difficulty":1,
+            "Instructions":"Trace the shown object as accurately as possible.\n\nTip: While drawing try to imagine where all the lines you don't see or only see partially will go. Watch out for paralel lines as well!",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"cylinder",
+            "name":"Cylinder",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task4/3.svg",
+            "difficulty":2,
+            "Instructions":"Trace the shown object as accurately as possible.\n\nTip: Symetrical shapes are easier to imagine and draw correctly.",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"object",
+            "name":"Object",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task4/4.svg",
+            "difficulty":3,
+            "Instructions":"Trace the shown object as accurately as possible.",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"cheese",
+            "name":"Cheese",
+            "compare_type":"tracing",
+            "file":"svgs/Lesson1/Task4/5.svg",
+            "difficulty":5,
+            "Instructions":"Trace the shown object as accurately as possible.\n\nTip: Cheese tastes very good. 10/10 would recommend.",
+            "params": {
+                "tolerance": 0.03,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"grid1_simple",
+            "name":"Simple Perspective With One Vanishing Point",
             "compare_type":"perspective",
             "file":"svgs/Lesson3/Grid1.svg",
             "reference": "svgs//Lesson3/Grid1Test.svg",
             "difficulty":"2",
-            "Instructions":"test",
+            "Instructions":"While drawing in perspective, parallel lines appear to converge toward specific points in the distance.\nThese points are called vanishing points and they help create the illusion of depth and space on a flat surface.\nIn this course, we will focus on cases with one or two vanishing points.\n\nIn this exercise, you are provided with a grid template and a reference photo in the bottom-left corner. Your task is to trace the image onto the grid as accurately as possible.",
             "params": {
+                "tolerance": 0.03,
                 "van_points": 1,
                 "outlier_percent": 10,
                 "angle_tolerance": 15.0,
                 "samples": 500
             }
-        } 
+        },
+        {
+            "task_id":"grid1_intermediate",
+            "name":"Perspective With One Vanishing Point",
+            "compare_type":"perspective",
+            "file":"svgs/Lesson3/Grid1.svg",
+            "reference": "svgs//Lesson3/2.svg",
+            "difficulty":"3",
+            "Instructions":"Try to trace the image onto the grid as accurately as possible.\n\nTip: pay close attention to distance between different objects on the reference photo and how far they are from grid lines.",
+            "params": {
+                "tolerance": 0.03,
+                "van_points": 1,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"grid1_hard",
+            "name":"Hard Perspective With One Vanishing Point",
+            "compare_type":"perspective",
+            "file":"svgs/Lesson3/Grid1.svg",
+            "reference": "svgs//Lesson3/1.svg",
+            "difficulty":"4",
+            "Instructions":"Try to trace the image onto the grid as accurately as possible.\n\nTip: All horizontal lines are paralel.",
+            "params": {
+                "tolerance": 0.03,
+                "van_points": 1,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        },
+        {
+            "task_id":"grid2_simple",
+            "name":"Perspective With Two Vanishing Points",
+            "compare_type":"perspective",
+            "file":"svgs/Lesson3/Grid2.svg",
+            "reference": "svgs//Lesson3/Grid2Test.svg",
+            "difficulty":"5",
+            "Instructions":"Try to trace the image onto the grid as accurately as possible.",
+            "params": {
+                "tolerance": 0.03,
+                "van_points": 1,
+                "outlier_percent": 10,
+                "angle_tolerance": 15.0,
+                "samples": 500
+            }
+        }
+
 
     ],
 
@@ -233,13 +492,29 @@
                         "right_angle_lines_2", "left_angle_lines_2", "90_deg_lines", "zig_zag"]
         },
         {
-            "lesson_id": "paralell_lines",
-            "title": "Paralell Lines",
-            "text": "Lorem Ipsum",
+            "lesson_id": "lesson_paralell_lines",
+            "title": "Drawing fundamentals - Paralell Lines",
+            "text": "Practice for better lines without tracing",
             "tasks": ["paralell_1", "paralell_2", "paralell_3", "paralell_4"]
+        },
+        {
+            "lesson_id": "lesson_shapes",
+            "title": "Drawing fundamentals - Shapes",
+            "text": "Learn to draw basic shapes with clean, confident lines.",
+            "tasks": ["circle_small", "circle_big", "ellipse_horizontal", "ellipse_vertical", "square_small", "square_big", "rectangles_vertical", "rectangles_diagonal", "rectangles_horizontal", "triangle"]
+        },
+        {
+            "lesson_id": "lesson_3D_objects",
+            "title": "Drawing fundamentals - 3D Objects",
+            "text": "Train your eye in depth perseption and learn to draw basic objects",
+            "tasks": ["cube", "pyramid", "cylinder", "object", "cheese"]
+        },
+        {
+            "lesson_id": "lesson_perspective",
+            "title": "Drawing principles - Perspective",
+            "text": "Understand how perspective creates the illusion of depth in drawings",
+            "tasks": ["grid1_simple", "pyramid", "cylinder", "object", "cheese"]
         }
-        
-
     ]
 
     

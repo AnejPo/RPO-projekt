@@ -64,7 +64,7 @@ def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: list
 
     for stroke in straight_segments:
         if len(stroke) < 3:
-            print(len(stroke))
+            #print(len(stroke))
             continue
 
         actual_angle = get_angle(stroke[0], stroke[-1])
@@ -89,9 +89,9 @@ def score_straightness(user_strokes_n: List[List[Point]], target_angle_deg: list
     
     wobble_mean = float(np.mean(wobble_vals))
 
-    print("wobbles:", wobble_vals[:10])
-    print("wobble_mean:", wobble_mean)
-    print("tolerance:", tolerance, "tolerance*5:", tolerance * 5.0)
+    #print("wobbles:", wobble_vals[:10])
+    #print("wobble_mean:", wobble_mean)
+    #print("tolerance:", tolerance, "tolerance*5:", tolerance * 5.0)
 
     s = 1.0 - (wobble_mean / (tolerance * 5.0))
     return float(max(0.0, min(1.0, s)))
@@ -133,13 +133,15 @@ def compare(task: dict, template_strokes_n: List[List[Point]], user_strokes_n: L
     T_pts = [pt for s in template_strokes_n for pt in s]
     U_pts = [pt for s in user_strokes_n for pt in s]
     
-
     params = task.get("params", {})
     tolerance = params.get("tolerance", 0.05)
     samples = params.get("samples")
     outlier_percent = params.get("outlier_percent", 10.0)
-    target_angle = params.get("target_angle_deg", [])
+    target_angle = params.get("target_angle_deg")
     heatmap_points = 50
+
+    #print(f"User Points {user_strokes_n}")
+    #print(f"Template Points: {template_strokes_n}")
 
     T = np.asarray(T_pts, dtype=np.float32)
     U = np.asarray(U_pts, dtype=np.float32)

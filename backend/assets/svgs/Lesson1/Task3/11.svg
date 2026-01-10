@@ -2,13 +2,13 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="97.761238mm"
-   height="97.392784mm"
-   viewBox="0 0 97.761238 97.392784"
+   width="51.542107mm"
+   height="99.739471mm"
+   viewBox="0 0 51.542107 99.739471"
    version="1.1"
    id="svg1"
    inkscape:version="1.4.3 (0d15f75, 2025-12-25)"
-   sodipodi:docname="11.svg"
+   sodipodi:docname="6.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,8 +24,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="1.0155724"
-     inkscape:cx="197.91794"
-     inkscape:cy="97.481972"
+     inkscape:cx="103.38997"
+     inkscape:cy="123.0833"
      inkscape:window-width="2560"
      inkscape:window-height="1374"
      inkscape:window-x="-8"
@@ -38,30 +38,14 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-25.224089,-29.597737)">
-    <rect
+     transform="translate(-77.580379,-115.94847)">
+    <ellipse
        style="fill:none;stroke:#d32e2e;stroke-width:1"
-       id="rect1"
-       width="19.800001"
-       height="70.602631"
-       x="75.0662"
-       y="-32.208679"
-       transform="rotate(45)" />
-    <rect
-       style="fill:none;stroke:#d32e2e;stroke-width:1"
-       id="rect2"
-       width="32.565788"
-       height="43.247368"
-       x="107.89253"
-       y="-32.4692"
-       transform="rotate(45)" />
-    <rect
-       style="fill:none;stroke:#d32e2e;stroke-width:1"
-       id="rect3"
-       width="32.826313"
-       height="15.892105"
-       x="108.41357"
-       y="21.459738"
-       transform="rotate(45)" />
+       id="path1"
+       cx="165.81821"
+       cy="-103.35143"
+       rx="49.369736"
+       ry="25.271053"
+       transform="rotate(90)" />
   </g>
 </svg>
