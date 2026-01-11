@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+import os
 
 from routes.compare import compare_bp
 from routes.templates import templates_bp
@@ -10,8 +11,11 @@ def create_app():
     """
     App factory function.
     """
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    app = Flask(__name__)
+    app = Flask(__name__,
+        static_folder=os.path.join(BASE_DIR, "assets"),
+        static_url_path="")
     
     # Konfiguracija
     app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'

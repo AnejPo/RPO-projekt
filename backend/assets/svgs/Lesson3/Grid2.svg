@@ -24,7 +24,7 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="1.0351712"
-     inkscape:cx="412.49216"
+     inkscape:cx="413.45818"
      inkscape:cy="305.26352"
      inkscape:window-width="2560"
      inkscape:window-height="1374"
@@ -39,28 +39,31 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(3.8039742,-31.653871)">
-    <path
-       id="rect1"
-       style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
-       d="M 160.69109,32.842186 V 191.62482 m -56.64522,0 V 32.842186"
-       sodipodi:nodetypes="cccc" />
-    <path
-       id="rect2"
-       style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
-       d="M 50.074893,191.63236 V 32.849723"
-       sodipodi:nodetypes="cc" />
-    <path
-       id="rect3"
-       style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
-       d="M 210.77228,112.48308 H -1.708076"
-       sodipodi:nodetypes="cc" />
-    <path
-       style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
-       d="M 103.90588,32.236458 210.75824,112.49931 104.62141,191.81231 -1.9924209,112.02439 Z"
-       id="path1" />
-    <path
-       style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
-       d="M 210.28121,112.73678 104.3829,70.468174 -2.4694403,112.49931 103.66738,149.78117 Z"
-       id="path2" />
+    <g
+       id="g1">
+      <path
+         id="rect1"
+         style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
+         d="M 160.69109,32.842186 V 191.62482 m -56.64522,0 V 32.842186"
+         sodipodi:nodetypes="cccc" />
+      <path
+         id="rect2"
+         style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
+         d="M 50.074893,191.63236 V 32.849723"
+         sodipodi:nodetypes="cc" />
+      <path
+         id="rect3"
+         style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
+         d="M 210.77228,112.48308 H -1.708076"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
+         d="M 103.90588,32.236458 210.75824,112.49931 104.62141,191.81231 -1.9924209,112.02439 Z"
+         id="path1" />
+      <path
+         style="fill:none;stroke:#d32e2e;stroke-width:0.931111"
+         d="M 210.28121,112.73678 104.3829,70.468174 -2.4694403,112.49931 103.66738,149.78117 Z"
+         id="path2" />
+    </g>
   </g>
 </svg>

@@ -295,6 +295,11 @@ async function safeInitLessonPage() {
         initCanvas();
         await initializeLessonFlowSafely();
 
+        const { taskId } = getLessonAndTaskFromUrl();
+        if (taskId) {
+            await updateReferenceImage(taskId);
+        }
+
         if (typeof initBrushUI === 'function') {
             initBrushUI();
         }
@@ -334,6 +339,22 @@ async function safeInitLessonPage() {
         alert('Napaka pri nalaganju lekcije: ' + err.message);
     }
 }
+
+async function updateReferenceImage(taskId) {
+    const card = document.getElementById('referenceCard');
+    const img = document.getElementById('referenceImage');
+    if (!card || !img) return;
+
+    const meta = await getTaskMetadata(taskId); // from tasks.js
+
+    if (meta && meta.reference) {
+        img.src = `${API_BASE}/${meta.reference}`;
+        card.style.display = 'block';
+    } else {
+        card.style.display = 'none';
+    }
+}
+
 
 // WRAPPER okoli prave initializeLessonFlow, da se ne zaleti na index.html
 async function initializeLessonFlowSafely() {
