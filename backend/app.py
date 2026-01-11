@@ -13,9 +13,11 @@ def create_app():
     """
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    app = Flask(__name__,
-        static_folder=os.path.join(BASE_DIR, "assets"),
-        static_url_path="")
+    app = Flask(
+    __name__,
+    static_folder=os.path.join(BASE_DIR, "assets"),
+    static_url_path=""
+    )
     
     # Konfiguracija
     app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
@@ -43,5 +45,5 @@ def create_app():
 
 if __name__ == "__main__":
     app = create_app()
-    app.run(host="127.0.0.1", port=5000,debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=True, use_reloader=False)
     
