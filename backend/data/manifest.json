@@ -6,7 +6,7 @@
             "compare_type": "tracing",
             "file": "svgs/Lesson1/Task1/1.svg",
             "difficulty": 1,
-            "Instructions":"To improve your drawing skills, it's essential to first develop strong hand-eye coordination.\nOne of the simplest and most effective ways to do this is by practicing basic shapes and lines.\n\nTrace these lines as closely as you can and make sure you only use a single stroke per line.",
+            "Instructions":"Your first task is to trace vertical lines. Though tracing is often frowned upon in the art world, it's actually a really good tool for learning and improving your art.\n\nTrace these lines as closely as you can and make sure you only use a single stroke per line.",
             "params": {
                 "target_angle_deg": [90],
                 "outlier_percent": 10,
@@ -219,7 +219,7 @@
             "compare_type":"tracing",
             "file":"svgs/Lesson1/Task3/2.svg",
             "difficulty":1,
-            "Instructions":"Try your best to trace the shape below.\n\nNow that drawing straight lines freehand feels more natural, it's time to move on to shapes. Do your best!",
+            "Instructions":"Try your best to trace the shape below.\n\nTip: Being able to draw good circles is very important for an artist so try to repeat this exercise until you are confident in your lines.",
             "params": {
                 "tolerance": 0.03,
                 "outlier_percent": 10,
@@ -302,7 +302,7 @@
             "compare_type":"tracing",
             "file":"svgs/Lesson1/Task3/7.svg",
             "difficulty":2,
-            "Instructions":"Try your best to trace the shapes below.\n\nTip: if you find diagonals challenging you can always turn your tablet so it's easier to freely move your wrist.",
+            "Instructions":"Try your best to trace the shapes below.\n\nTip: if you find diagonals challenging, you can always turn your tablet so it's easier to freely move your wrist.",
             "params": {
                 "target_angle_deg":[135, 45],
                 "tolerance": 0.03,
@@ -345,7 +345,7 @@
             "compare_type":"tracing",
             "file":"svgs/Lesson1/Task4/1.svg",
             "difficulty":2,
-            "Instructions":"One of the most important skills for an artist is understanding three-dimensional space.\nThe following exercises will help you become more comfortable drawing objects with depth and form. Do your best!",
+            "Instructions":"Trace the shown object as accurately as possible.\n\nTip: This is a cube so make sure all the lines are paralel and straight.",
             "params": {
                 "tolerance": 0.03,
                 "outlier_percent": 10,
@@ -359,7 +359,7 @@
             "compare_type":"tracing",
             "file":"svgs/Lesson1/Task4/2.svg",
             "difficulty":1,
-            "Instructions":"Trace the shown object as accurately as possible.\n\nTip: While drawing try to imagine where all the lines you don't see or only see partially will go. Watch out for paralel lines as well!",
+            "Instructions":"Trace the shown object as accurately as possible.\n\nTip: While drawing try to imagine where all the lines you don't see or only see partially will go. This will make it easier to acurately draw the shapes.",
             "params": {
                 "tolerance": 0.03,
                 "outlier_percent": 10,
@@ -387,7 +387,7 @@
             "compare_type":"tracing",
             "file":"svgs/Lesson1/Task4/4.svg",
             "difficulty":3,
-            "Instructions":"Trace the shown object as accurately as possible.",
+            "Instructions":"Trace the shown object as accurately as possible.\n\nTip: Large and complex onjects are a lot easier to tackle if we break them down into smaller and simpler pieces.",
             "params": {
                 "tolerance": 0.03,
                 "outlier_percent": 10,
@@ -416,7 +416,7 @@
             "file":"svgs/Lesson3/Grid1.svg",
             "reference": "svgs/Lesson3/Grid1Test.svg",
             "difficulty":"2",
-            "Instructions":"While drawing in perspective, parallel lines appear to converge toward specific points in the distance.\nThese points are called vanishing points and they help create the illusion of depth and space on a flat surface.\nIn this course, we will focus on cases with one or two vanishing points.\n\nIn this exercise, you are provided with a grid template and a reference photo in the bottom-left corner. Your task is to trace the image onto the grid as accurately as possible.",
+            "Instructions":"In this exercise, you are provided with a grid template and a reference photo in the bottom-left corner.\nYour task is to trace the image onto the grid as accurately as possible.",
             "params": {
                 "tolerance": 0.03,
                 "van_points": 1,
@@ -448,7 +448,7 @@
             "file":"svgs/Lesson3/Grid1.svg",
             "reference": "svgs/Lesson3/1.svg",
             "difficulty":"4",
-            "Instructions":"Try to trace the image onto the grid as accurately as possible.\n\nTip: All horizontal lines are paralel.",
+            "Instructions":"Try to trace the image onto the grid as accurately as possible.\n\nTip: All horizontal and vertical lines are paralel, while all other lines lead into the vanashing points.",
             "params": {
                 "tolerance": 0.03,
                 "van_points": 1,
@@ -464,7 +464,7 @@
             "file":"svgs/Lesson3/Grid2.svg",
             "reference": "svgs/Lesson3/Grid2Test.svg",
             "difficulty":"5",
-            "Instructions":"Try to trace the image onto the grid as accurately as possible.",
+            "Instructions":"Try to trace the image onto the grid as accurately as possible.\n\nTip: In this case we have two vanishing points so the buildings look closer in the center and farther on the sides.",
             "params": {
                 "tolerance": 0.03,
                 "van_points": 1,
@@ -480,6 +480,7 @@
             "lesson_id": "lesson_intro",
             "title": "Drawing Fundamentals - Drawing Straight Lines",
             "text": "Practice for better hand-eye coordination",
+            "description": "To improve your drawing skills, it's essential to first develop strong hand-eye coordination.\nOne of the simplest and most effective ways to do this is by practicing basic shapes and lines.\nIn this lesson you will be tracing lots of straight lines of different sizes and orientations to build up muscle memory. This will make future drawing a lot easier.",
             "tasks": ["vertical_lines", "horizontal_lines", "vertical_lines_2", "horizontal_lines_2", "right_angle_lines", "left_angle_lines",
                         "right_angle_lines_2", "left_angle_lines_2", "90_deg_lines", "zig_zag"]
         },
@@ -487,24 +488,28 @@
             "lesson_id": "lesson_paralell_lines",
             "title": "Drawing fundamentals - Paralell Lines",
             "text": "Practice for better lines without tracing",
+            "description": "After all of this tracing practice, it's time to test yourself in freehand drawing.\nIn this lesson you will be drawing paralel lines from one point to the other.\nIt's important you draw the lines in one stroke and keep repeating the lines until you're confident in drawing them.",
             "tasks": ["paralell_1", "paralell_2", "paralell_3", "paralell_4"]
         },
         {
             "lesson_id": "lesson_shapes",
             "title": "Drawing fundamentals - Shapes",
             "text": "Learn to draw basic shapes with clean, confident lines.",
+            "description": "Now that drawing straight lines freehand feels more natural, it's time to move on to shapes.\nSimple shapes are the foundation of drawing. Any complex structure, beeing or plant can be broken apart into smaller, simpler shapes.\nYour job as an artist is recognising those shapes and being able to put them on paper.\nThis lesson will familiarise you with the most common shapes and build your confidence in drawing them freehand.",
             "tasks": ["circle_small", "circle_big", "ellipse_horizontal", "ellipse_vertical", "square_small", "square_big", "rectangles_vertical", "rectangles_diagonal", "rectangles_horizontal", "triangle"]
         },
         {
             "lesson_id": "lesson_3D_objects",
             "title": "Drawing fundamentals - 3D Objects",
             "text": "Train your eye in depth perseption and learn to draw basic objects",
+            "description": "One of the most important skills for an artist is understanding three-dimensional space.\nThe following exercises will help you become more comfortable drawing objects with depth and form.\nLater in the course we will be using these shapes to build the base for a human body. Do your best!",
             "tasks": ["cube", "pyramid", "cylinder", "object", "cheese"]
         },
         {
             "lesson_id": "lesson_perspective",
             "title": "Drawing principles - Perspective",
             "text": "Understand how perspective creates the illusion of depth in drawings",
+            "description": "While drawing in perspective, parallel lines appear to converge toward specific points in the distance.\nThese points are called vanishing points and they help create the illusion of depth and space on a flat surface.\nIn this course, we will focus on cases with one vanishing point in the center or two vanishing points on each side of the canvas.\nWhile drawing make sure that all lines are either paralel to he base line or that they lead to the vanashing point.",
             "tasks": ["grid1_simple", "grid1_intermediate", "grid1_hard", "grid2_simple"]
         }
     ]
