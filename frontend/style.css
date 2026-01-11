@@ -80,3 +80,37 @@ body {
 #taskInstructions{
     white-space: pre-line;
 }
+
+/* Uporabni razred, ki ohrani prelomne vrstice iz polj JSON v elementu */
+.preserve-whitespace{
+    white-space: pre-line;
+}
+
+/* Oblika za gumb z informacijami o opravilu */
+.task-info-btn {
+    padding: 0.22rem 0.35rem;
+    line-height: 1;
+}
+
+/* Centriraj navigacijsko vrstico, hkrati pa ohrani funkcionalnost levih/desnih kontrolnikov */
+.navbar .container-fluid { position: relative; }
+.navbar .navbar-brand.centered {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+}
+
+/* Leve kontrolnike naj bodo nad sredinsko nameščeno blagovno znamko, da bodo gumbi še vedno klikljivi */
+.navbar .left-controls { z-index: 2; }
+
+@media (max-width: 576px) {
+    /* Na majhnih zaslonih naj blagovna znamka normalno teče, da se izogne ​​prekrivanju */
+    .navbar .navbar-brand.centered {
+        position: static;
+        transform: none;
+        text-align: center;
+        display: block;
+        width: 100%;
+    }
+}

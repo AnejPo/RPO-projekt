@@ -108,7 +108,9 @@ async function initializeLessonFlow() {
                 : (task.instructions || '');
 
         if (taskInstructionsElem) {
-            taskInstructionsElem.textContent = taskInstr;
+            // Navodila za posamezno nalogo ne prikazuj v vrstici; navodila so prikazana samo v modalnem oknu
+            taskInstructionsElem.textContent = '';
+            taskInstructionsElem.style.display = 'none';
         }
 
         // 3. Naloži SVG za primerjavo

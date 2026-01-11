@@ -11,10 +11,15 @@
 <body>
 <nav class="navbar navbar-dark bg-primary">
     <div class="container-fluid">
-        <a href="index.html" class="btn btn-outline-light btn-sm">
-            <i class="bi bi-arrow-left"></i> Nazaj
-        </a>
-        <span class="navbar-brand mb-0 h1" id="lessonTitle">Lekcija</span>
+        <div class="left-controls d-flex align-items-center">
+            <a href="index.html" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left"></i> Nazaj
+            </a>
+            <button id="showLessonInstructionsBtn" class="btn btn-outline-light btn-sm ms-2" style="display:none;">
+                <i class="bi bi-info-circle"></i> Opis lekcije
+            </button>
+        </div>
+        <span class="navbar-brand mb-0 h1 centered" id="lessonTitle">Lekcija</span>
         <div class="badge bg-warning text-dark">
             Točke: <span id="totalPointsDisplayLesson">0</span>
         </div>
@@ -30,7 +35,7 @@
                     Navodila
                 </div>
                 <div class="card-body">
-                    <p id="taskInstructions" class="mb-3">Nalaganje...</p>
+                    <p id="taskInstructions" class="mb-3 preserve-whitespace">Nalaganje...</p>
 
                     <h6 id="taskName">Naloga</h6>
 
@@ -173,6 +178,38 @@
 
         </div>
     </div>
+</div>
+
+<!-- Modalno okno z navodili za lekcijo  -->
+<div class="modal fade" id="lessonInstructionsModal" tabindex="-1" aria-labelledby="lessonInstructionsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="lessonInstructionsModalTitle">Lekcija</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body preserve-whitespace" id="lessonInstructionsModalBody">Nalagam...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="lessonContinueBtn" data-bs-dismiss="modal">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modalno okno opravila, ki prikazuje navodila za vsako opravilo -->
+<div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="taskModalTitle">Naloga</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body preserve-whitespace" id="taskModalBody">Nalagam...</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nazaj</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

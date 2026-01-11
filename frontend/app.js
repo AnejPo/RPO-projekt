@@ -190,7 +190,16 @@ async function initDashboard() {
         toggleBtn.setAttribute('aria-expanded', 'false');
 
         const title = document.createElement('div');
-        title.innerHTML = `<strong>${lesson.title}</strong><br><small>${lesson.text}</small>`;
+        // Naslov povezuje na stran lekcije (prikazuje opis in podnaloge)
+        const titleLink = document.createElement('a');
+        titleLink.href = `lesson.html?lesson=${encodeURIComponent(lesson.lesson_id)}`;
+        titleLink.innerHTML = `<strong>${lesson.title}</strong>`;
+        titleLink.className = 'me-2 text-decoration-none';
+        const shortDesc = document.createElement('div');
+        shortDesc.className = 'small text-muted';
+        shortDesc.textContent = lesson.text || '';
+        title.appendChild(titleLink);
+        title.appendChild(shortDesc);
 
         leftPart.appendChild(toggleBtn);
         leftPart.appendChild(title);
@@ -287,17 +296,186 @@ async function initDashboard() {
     });
 }
 
-// ---------- LESSON PAGE ---------- //
+// ---------- LESSON STRAN ---------- //
+
+async function showTaskModal(lessonId, taskId) {
+    try {
+        const modalTitle = document.getElementById('taskModalTitle');
+        const modalBody = document.getElementById('taskModalBody');
+
+        if (modalTitle) modalTitle.textContent = 'Naloga';
+        if (modalBody) modalBody.textContent = 'Nalaganje...';
+
+        // Naloži metapodatke opravila in izpolni modalno okno (samo za branje)
+        try {
+            const meta = await getTaskMetadata(taskId);
+            if (modalTitle) modalTitle.textContent = (meta && meta.name) ? meta.name : taskId;
+
+            const instr = (meta && (meta.Instructions || meta.instructions)) ? (meta.Instructions || meta.instructions) : '';
+            if (modalBody) modalBody.textContent = instr || 'Ni navodil za to nalogo.';
+        } catch (e) {
+            if (modalBody) modalBody.textContent = 'Navodila niso na voljo.';
+        }
+
+        // Prikaži modalno okno (READONLY; brez gumba Start)
+        const modalEl = document.getElementById('taskModal');
+        if (modalEl && typeof bootstrap !== 'undefined') {
+            const bsModal = new bootstrap.Modal(modalEl);
+            bsModal.show();
+        }
+    } catch (err) {
+        console.error('showTaskModal error', err);
+    }
+}
+
+async function populateLessonPage(lessonId, taskId) {
+    try {
+        if (!lessonId) return;
+        const lesson = await getLessonContent(lessonId);
+        document.getElementById('lessonTitle').textContent = lesson.title || 'Lekcija';
+
+        const instrEl = document.getElementById('taskInstructions');
+        // Prikaži dolg opis lekcije (če manjka, se vrne na kratko besedilo)
+        instrEl.textContent = lesson.description || lesson.text || '';
+
+        // Priprava in prikaz modalnih navodil (pri odpiranju same strani z lekcijo)
+        const modalTitle = document.getElementById('lessonInstructionsModalTitle');
+        const modalBody = document.getElementById('lessonInstructionsModalBody');
+        const showBtn = document.getElementById('showLessonInstructionsBtn');
+
+        if (modalTitle && modalBody) {
+            modalTitle.textContent = lesson.title || 'Lekcija';
+            modalBody.textContent = lesson.description || lesson.text || '';
+            if (showBtn) showBtn.style.display = 'inline-block';
+
+            // Samodejno prikaži modalno okno ob odpiranju lekcije (ni izbrana nobena posebna naloga)
+            if (!taskId && typeof bootstrap !== 'undefined') {
+                try {
+                    instrEl.style.display = 'none'; // skrivanje vgrajenih navodil, da se izognete podvajanju
+                } catch (e) { /* ignore */ }
+
+                const modalEl = document.getElementById('lessonInstructionsModal');
+                const bsModal = new bootstrap.Modal(modalEl);
+                modalEl.addEventListener('hidden.bs.modal', () => {
+                    // Navodila v vrstici naj bodo skrita; uporabnik jih lahko ponovno odpre z gumbom Opis
+                }, { once: true });
+                bsModal.show();
+            }
+        }
+
+        // Pokaži navodila na zahtevo
+        if (showBtn) {
+            showBtn.onclick = () => {
+                if (typeof bootstrap !== 'undefined') {
+                    const modalEl = document.getElementById('lessonInstructionsModal');
+                    const bsModal = new bootstrap.Modal(modalEl);
+                    bsModal.show();
+                }
+            };
+        }
+
+        const taskNameEl = document.getElementById('taskName');
+        taskNameEl.textContent = taskId ? taskId : 'Izberi nalogo';
+
+        let tasksListEl = document.getElementById('lessonTasksList');
+        if (!tasksListEl) {
+            tasksListEl = document.createElement('div');
+            tasksListEl.id = 'lessonTasksList';
+            tasksListEl.className = 'mt-3';
+
+            const tasksHeader = document.createElement('h6');
+            tasksHeader.className = 'mb-2';
+            tasksHeader.textContent = 'Naloge';
+            tasksListEl.appendChild(tasksHeader);
+
+            const listGroup = document.createElement('div');
+            listGroup.className = 'list-group';
+            listGroup.id = 'lessonTasksGroup';
+            tasksListEl.appendChild(listGroup);
+
+            instrEl.insertAdjacentElement('afterend', tasksListEl);
+        }
+
+        const listGroup = tasksListEl.querySelector('#lessonTasksGroup');
+        listGroup.innerHTML = '';
+
+        if (Array.isArray(lesson.tasks) && lesson.tasks.length > 0) {
+            // pridobivanje metapodatkov opravil za prikaz lepših imen in stanja
+            for (const tid of lesson.tasks) {
+                let label = tid;
+                try {
+                    const meta = await getTaskMetadata(tid);
+                    if (meta && meta.name) label = meta.name;
+                } catch (e) {
+                    // prezri napako metapodatkov in se vrne na ID
+                }
+
+                const taskItem = document.createElement('button');
+                taskItem.type = 'button';
+                taskItem.className = 'list-group-item list-group-item-action d-flex justify-content-between align-items-center';
+
+                const left = document.createElement('span');
+                left.textContent = label;
+
+                const right = document.createElement('div');
+
+                // dokončan badge
+                const completed = isTaskCompleted(lessonId, tid);
+                if (completed) {
+                    const cBadge = document.createElement('span');
+                    cBadge.className = 'badge bg-success';
+                    cBadge.textContent = 'Dokončano';
+                    right.appendChild(cBadge);
+                }
+
+                // info button za odpiranje pojavnega okna opravila brez navigacije
+                const infoBtn = document.createElement('button');
+                infoBtn.type = 'button';
+                infoBtn.className = 'btn btn-sm btn-outline-secondary ms-2 task-info-btn';
+                infoBtn.title = 'Prikaži navodila';
+                infoBtn.innerHTML = '<i class="bi bi-question-circle"></i>';
+                infoBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showTaskModal(lessonId, tid);
+                });
+
+                right.appendChild(infoBtn);
+
+                taskItem.appendChild(left);
+                taskItem.appendChild(right);
+
+                // S klikom na opravilo se pomaknete neposredno na opravilo
+                taskItem.addEventListener('click', () => {
+                    window.location.href = `lesson.html?lesson=${encodeURIComponent(lessonId)}&task=${encodeURIComponent(tid)}`;
+                });
+
+                listGroup.appendChild(taskItem);
+            }
+        } else {
+            listGroup.innerHTML = '<p class="text-muted small">Ta lekcija še nima nalog.</p>';
+        }
+    } catch (e) {
+        console.error('populateLessonPage error', e);
+    }
+}
 
 async function safeInitLessonPage() {
     try {
         console.log('[app] initializing lesson page');
+        const { lessonId, taskId } = getLessonAndTaskFromUrl();
+        await populateLessonPage(lessonId, taskId);
+
+        // Če ni izbrana nobena naloga, prikaži samo informacije o lekciji in naloge
+        if (!taskId) {
+            return;
+        }
+
         initCanvas();
         await initializeLessonFlowSafely();
 
-        const { taskId } = getLessonAndTaskFromUrl();
-        if (taskId) {
-            await updateReferenceImage(taskId);
+        const { taskId: currentTask } = getLessonAndTaskFromUrl();
+        if (currentTask) {
+            await updateReferenceImage(currentTask);
         }
 
         if (typeof initBrushUI === 'function') {
