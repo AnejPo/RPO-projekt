@@ -414,7 +414,7 @@
             "name":"Simple Perspective With One Vanishing Point",
             "compare_type":"perspective",
             "file":"svgs/Lesson3/Grid1.svg",
-            "reference": "svgs//Lesson3/Grid1Test.svg",
+            "reference": "svgs/Lesson3/Grid1Test.svg",
             "difficulty":"2",
             "Instructions":"While drawing in perspective, parallel lines appear to converge toward specific points in the distance.\nThese points are called vanishing points and they help create the illusion of depth and space on a flat surface.\nIn this course, we will focus on cases with one or two vanishing points.\n\nIn this exercise, you are provided with a grid template and a reference photo in the bottom-left corner. Your task is to trace the image onto the grid as accurately as possible.",
             "params": {
@@ -430,7 +430,7 @@
             "name":"Perspective With One Vanishing Point",
             "compare_type":"perspective",
             "file":"svgs/Lesson3/Grid1.svg",
-            "reference": "svgs//Lesson3/2.svg",
+            "reference": "svgs/Lesson3/2.svg",
             "difficulty":"3",
             "Instructions":"Try to trace the image onto the grid as accurately as possible.\n\nTip: pay close attention to distance between different objects on the reference photo and how far they are from grid lines.",
             "params": {
@@ -446,7 +446,7 @@
             "name":"Hard Perspective With One Vanishing Point",
             "compare_type":"perspective",
             "file":"svgs/Lesson3/Grid1.svg",
-            "reference": "svgs//Lesson3/1.svg",
+            "reference": "svgs/Lesson3/1.svg",
             "difficulty":"4",
             "Instructions":"Try to trace the image onto the grid as accurately as possible.\n\nTip: All horizontal lines are paralel.",
             "params": {
@@ -462,7 +462,7 @@
             "name":"Perspective With Two Vanishing Points",
             "compare_type":"perspective",
             "file":"svgs/Lesson3/Grid2.svg",
-            "reference": "svgs//Lesson3/Grid2Test.svg",
+            "reference": "svgs/Lesson3/Grid2Test.svg",
             "difficulty":"5",
             "Instructions":"Try to trace the image onto the grid as accurately as possible.",
             "params": {
@@ -473,17 +473,9 @@
                 "samples": 500
             }
         }
-
-
     ],
 
     "lessons": [
-        {
-             "lesson_id":"lesson_perspective",
-            "title": "Test",
-            "text": "lorem ipsum",
-            "tasks": ["test"]
-        },
         {
             "lesson_id": "lesson_intro",
             "title": "Drawing Fundamentals - Drawing Straight Lines",
@@ -513,9 +505,7 @@
             "lesson_id": "lesson_perspective",
             "title": "Drawing principles - Perspective",
             "text": "Understand how perspective creates the illusion of depth in drawings",
-            "tasks": ["grid1_simple", "pyramid", "cylinder", "object", "cheese"]
+            "tasks": ["grid1_simple", "grid1_intermediate", "grid1_hard", "grid2_simple"]
         }
     ]
-
-    
 }
