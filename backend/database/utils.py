@@ -1,8 +1,11 @@
+import os
 import sqlite3
 from sqlite3 import Error
 
+DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "database.db")
+
 def create_connection():
-    path = "./database/database.db"
+    path = DB_PATH
     connection = None
     try:
         connection = sqlite3.connect(path)
